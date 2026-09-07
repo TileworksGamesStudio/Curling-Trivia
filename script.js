@@ -558,16 +558,340 @@
           explanation: 'Curling honors conceding when victory is no longer possible; doing so is viewed as respectful sportsmanship.'
         }
       ]
+    },
+    {
+      id: 'round-11',
+      title: 'Round #11: Measuring & Scoring Calls',
+      themeCategory: 'Scoring & Rules',
+      questions: [
+        { question: 'Which stone is awarded the point when two stones appear equally close to the button?', options: ['The stone thrown last', 'The stone belonging to the team with hammer', 'No point is awarded until measured', 'Both stones score'], correctIndex: 2, explanation: 'A measure is required when the closest stones cannot be judged visually.' },
+        { question: 'What instrument is traditionally used to measure the distance between stones and the button?', options: ['A compass', 'A six-foot measure', 'A curling measure', 'A tee gauge'], correctIndex: 2, explanation: 'Officials use a curling measure to compare a stone with the center of the button.' },
+        { question: 'When counting an end, what determines how many stones score?', options: ['Every stone in the house', 'The number of one team’s stones closer than the opponent’s closest stone', 'The number of guards', 'The team with more stones'], correctIndex: 1, explanation: 'Only stones closer to the button than the opponent’s best stone count.' },
+        { question: 'What is the button?', options: ['The outer ring', 'The center circle of the house', 'The tee line', 'The delivery hack'], correctIndex: 1, explanation: 'The button is the small central circle around the exact center of the house.' },
+        { question: 'What happens after a tied end?', options: ['Both teams receive one point', 'The team with hammer loses it', 'The hammer normally remains with the same team', 'The game ends'], correctIndex: 2, explanation: 'A blank end preserves the last-rock advantage for the team that already held it.' }
+      ]
+    },
+    {
+      id: 'round-12',
+      title: 'Round #12: Anatomy of the Stone',
+      themeCategory: 'Equipment',
+      questions: [
+        { question: 'What part of a curling stone actually contacts the ice?', options: ['The handle', 'The running band', 'The belly', 'The cap'], correctIndex: 1, explanation: 'The narrow running band forms the stone’s contact ring with the ice.' },
+        { question: 'What is the handle attached to?', options: ['The stone body by a bolt', 'The running band by a magnet', 'The hack by a strap', 'The broom head'], correctIndex: 0, explanation: 'The handle is secured to the granite body with a bolt.' },
+        { question: 'Why is the underside of a curling stone hollowed?', options: ['To make it float', 'To reduce contact area and friction', 'To hold water', 'To increase its weight'], correctIndex: 1, explanation: 'The concave underside leaves only the running band touching the ice.' },
+        { question: 'Which material is commonly used for competition curling stone handles?', options: ['Plastic composite', 'Glass', 'Aluminum foil', 'Wood only'], correctIndex: 0, explanation: 'Modern handles are commonly made from durable plastic composite materials.' },
+        { question: 'What is the main reason curling stones are made from dense granite?', options: ['It absorbs water', 'It withstands repeated impacts and slides consistently', 'It is magnetic', 'It is transparent'], correctIndex: 1, explanation: 'Dense granite provides durability and predictable performance on ice.' }
+      ]
+    },
+    {
+      id: 'round-13',
+      title: 'Round #13: Origins of the Game',
+      themeCategory: 'Curling History',
+      questions: [
+        { question: 'Where are the earliest known written references to a game resembling curling found?', options: ['Scotland', 'Brazil', 'Japan', 'Egypt'], correctIndex: 0, explanation: 'Curling developed from Scottish ice games documented centuries ago.' },
+        { question: 'What surface did early curlers commonly use before dedicated indoor sheets?', options: ['Frozen ponds and lochs', 'Grass fields', 'Sand courts', 'Wooden floors'], correctIndex: 0, explanation: 'Early curling was played outdoors on naturally frozen water.' },
+        { question: 'What does the word bonspiel refer to?', options: ['A curling tournament', 'A type of stone', 'A sweeping command', 'A scoring ring'], correctIndex: 0, explanation: 'Bonspiel is the traditional term for a curling tournament.' },
+        { question: 'Which country is strongly associated with the early organized development of curling?', options: ['Scotland', 'Australia', 'Mexico', 'India'], correctIndex: 0, explanation: 'Modern organized curling grew from Scottish clubs and traditions.' },
+        { question: 'What was commonly used as an early curling stone?', options: ['A naturally shaped river stone', 'A tennis ball', 'A wooden cube', 'A metal puck'], correctIndex: 0, explanation: 'Early players used stones selected from rivers and shores before standardized granite rocks.' }
+      ]
+    },
+    {
+      id: 'round-14',
+      title: 'Round #14: World Championships',
+      themeCategory: 'Championships',
+      questions: [
+        { question: 'What organization governs international curling competition?', options: ['World Curling', 'FIFA', 'The IOC alone', 'The PGA'], correctIndex: 0, explanation: 'World Curling is the international governing body for the sport.' },
+        { question: 'What is the name of the world championship for men’s national teams?', options: ['World Men’s Curling Championship', 'The Silver Broom only', 'The Four Nations Cup', 'The Ice Masters'], correctIndex: 0, explanation: 'The World Men’s Curling Championship crowns the world team champion.' },
+        { question: 'What does a round-robin stage mean?', options: ['Every team plays each other', 'Teams are eliminated after one loss', 'Only skips throw', 'Games are played without scoring'], correctIndex: 0, explanation: 'In a round robin, each team faces every other team in the group.' },
+        { question: 'What is a playoff qualifier?', options: ['A team that earns a postseason place', 'A practice stone', 'A type of broom', 'A measurement device'], correctIndex: 0, explanation: 'Qualifying teams advance from the preliminary stage into playoff games.' },
+        { question: 'What is a tiebreaker used for?', options: ['Separating teams with equal records', 'Replacing the hammer', 'Cleaning the sheet', 'Measuring stone weight'], correctIndex: 0, explanation: 'Tiebreak procedures determine ranking when teams finish level.' }
+      ]
+    },
+    {
+      id: 'round-15',
+      title: 'Round #15: Hammer Strategy',
+      themeCategory: 'Game Strategy',
+      questions: [
+        { question: 'Why is the hammer valuable?', options: ['It gives the last shot of the end', 'It adds two players', 'It makes stones heavier', 'It removes the Free Guard Zone'], correctIndex: 0, explanation: 'The final stone can change the score after seeing the entire position.' },
+        { question: 'What is a team with hammer often trying to create?', options: ['A multiple-score opportunity', 'A guaranteed blank every end', 'An empty sheet only', 'A hog-line violation'], correctIndex: 0, explanation: 'The hammer team usually seeks a two-or-more point scoring setup.' },
+        { question: 'What is a force?', options: ['Holding the hammer team to one point', 'Stealing eight points', 'Removing every guard', 'Winning without throwing'], correctIndex: 0, explanation: 'A force limits the team with last rock to a single point.' },
+        { question: 'Why might a team intentionally blank an end?', options: ['To keep the hammer', 'To lose the game', 'To avoid sweeping', 'To reset the ice temperature'], correctIndex: 0, explanation: 'A blank lets the hammer team retain last-rock advantage.' },
+        { question: 'What is a defensive team often trying to protect with center guards?', options: ['The scoring path to the button', 'The scoreboard lights', 'The opponent’s hack', 'The sideboards'], correctIndex: 0, explanation: 'Center guards make direct access to the scoring area more difficult.' }
+      ]
+    },
+    {
+      id: 'round-16',
+      title: 'Round #16: Shot-Making Vocabulary',
+      themeCategory: 'Shots & Technique',
+      questions: [
+        { question: 'What is a draw?', options: ['A shot intended to stop in the house', 'A stone removed from play', 'A timeout', 'A measured tie'], correctIndex: 0, explanation: 'A draw is delivered with enough weight to settle in a scoring position.' },
+        { question: 'What is a hit and roll?', options: ['A takeout where the shooter rolls aside afterward', 'A stone that never spins', 'A blank end', 'A sweep call'], correctIndex: 0, explanation: 'The shooter removes a stone and continues to a planned resting position.' },
+        { question: 'What is a peel?', options: ['A shot removing a rock while the shooter rolls out', 'A gentle draw', 'A center guard', 'A type of shoe'], correctIndex: 0, explanation: 'A peel clears a stone and usually removes the delivering stone as well.' },
+        { question: 'What is a wick?', options: ['A glancing contact that redirects a stone', 'A time limit', 'A house measurement', 'An ice-making tool'], correctIndex: 0, explanation: 'A wick uses a light contact with a stationary stone to change direction.' },
+        { question: 'What is a freeze?', options: ['A draw that stops tight against another stone', 'A takeout at high speed', 'A blank end', 'A frozen hack'], correctIndex: 0, explanation: 'A freeze rests directly against another rock, making removal difficult.' }
+      ]
+    },
+    {
+      id: 'round-17',
+      title: 'Round #17: Sweeping Calls',
+      themeCategory: 'Sweeping',
+      questions: [
+        { question: 'What does “hurry” usually mean?', options: ['Sweep harder', 'Stop sweeping', 'Move the broom away', 'Measure the rock'], correctIndex: 0, explanation: 'Hurry is a call for more forceful sweeping.' },
+        { question: 'What does “whoa” usually mean?', options: ['Stop sweeping', 'Sweep harder', 'Throw another stone', 'Change the handle'], correctIndex: 0, explanation: 'Whoa tells sweepers to stop brushing.' },
+        { question: 'What can sweeping change most directly?', options: ['Distance and curl', 'The stone’s weight', 'The house diameter', 'The number of ends'], correctIndex: 0, explanation: 'Sweeping can make a stone travel farther and curl less.' },
+        { question: 'Why do sweepers communicate during a shot?', options: ['To judge speed and line together', 'To distract the other team', 'To change the rules', 'To polish the handle'], correctIndex: 0, explanation: 'Calls coordinate the team’s read of weight, line, and curl.' },
+        { question: 'What is a clean sweep intended to do?', options: ['Remove debris from the running path', 'Stop the rock immediately', 'Move a guard sideways', 'Change the stone color'], correctIndex: 0, explanation: 'Cleaning removes foreign material without applying maximum pressure.' }
+      ]
+    },
+    {
+      id: 'round-18',
+      title: 'Round #18: Reading the Ice',
+      themeCategory: 'Ice & Conditions',
+      questions: [
+        { question: 'What does ice speed describe?', options: ['How far a stone travels with a delivery weight', 'The stone’s color', 'The number of sweepers', 'The house diameter'], correctIndex: 0, explanation: 'Ice speed is the distance a stone carries for a given release and weight.' },
+        { question: 'What is a fall line?', options: ['The natural direction a stone drifts due to sheet slope', 'The back line', 'A player’s stance', 'A scoring rule'], correctIndex: 0, explanation: 'A fall line reflects the effect of a sheet’s subtle slope or contour.' },
+        { question: 'Why is pebble important?', options: ['It reduces contact and creates predictable curl', 'It makes the stone heavier', 'It marks the score', 'It replaces the house'], correctIndex: 0, explanation: 'Pebble lets the running band glide over small frozen droplets.' },
+        { question: 'What is a pick?', options: ['A piece of debris that makes a stone deviate', 'A high takeout', 'A scoring measurement', 'A type of hammer'], correctIndex: 0, explanation: 'A pick is unwanted material caught under or near the running band.' },
+        { question: 'Why do teams test draw weight early?', options: ['To learn how the sheet is running', 'To select the skip', 'To change the rules', 'To shorten the game'], correctIndex: 0, explanation: 'Early draws reveal speed, curl, and line characteristics.' }
+      ]
+    },
+    {
+      id: 'round-19',
+      title: 'Round #19: Mixed Doubles',
+      themeCategory: 'Game Formats',
+      questions: [
+        { question: 'How many players are on a Mixed Doubles team?', options: ['Two', 'Three', 'Four', 'Five'], correctIndex: 0, explanation: 'Mixed Doubles uses two-player teams.' },
+        { question: 'How many stones does each team normally deliver in a Mixed Doubles end?', options: ['Five', 'Six', 'Eight', 'Ten'], correctIndex: 0, explanation: 'Each team delivers five stones, in addition to the pre-positioned stones.' },
+        { question: 'What is the Power Play?', options: ['A one-time option to move pre-placed stones to the wings', 'A penalty shot', 'A longer timeout', 'A second hammer'], correctIndex: 0, explanation: 'The Power Play changes the starting layout for one end.' },
+        { question: 'How many ends are standard in Mixed Doubles?', options: ['Eight', 'Six', 'Ten', 'Twelve'], correctIndex: 0, explanation: 'A standard Mixed Doubles game is eight ends.' },
+        { question: 'Can the delivering player sweep their own stone?', options: ['Yes', 'No', 'Only on takeouts', 'Only in extra ends'], correctIndex: 0, explanation: 'The two-player format allows the thrower to sweep after delivering.' }
+      ]
+    },
+    {
+      id: 'round-20',
+      title: 'Round #20: Wheelchair Curling',
+      themeCategory: 'Inclusive Curling',
+      questions: [
+        { question: 'What equipment is commonly used to deliver a wheelchair curling stone?', options: ['A delivery stick', 'A golf club', 'A tennis racket', 'A hockey skate'], correctIndex: 0, explanation: 'A delivery stick allows the curler to release the handle from a seated position.' },
+        { question: 'What is not permitted in wheelchair curling delivery?', options: ['Sweeping by teammates', 'A delivery stick', 'A stationary wheelchair', 'Aiming at the house'], correctIndex: 0, explanation: 'Wheelchair curling traditionally does not allow sweeping by teammates.' },
+        { question: 'How does a wheelchair curler stabilize during delivery?', options: ['By keeping the chair stationary', 'By standing in the hack', 'By holding the sideboard', 'By using two brooms as skis'], correctIndex: 0, explanation: 'The chair remains stable while the player delivers the stone.' },
+        { question: 'What is the goal of inclusive curling formats?', options: ['To provide competitive play with adapted equipment and rules', 'To remove scoring', 'To shorten every game to one stone', 'To eliminate strategy'], correctIndex: 0, explanation: 'Adaptations make the sport accessible while preserving its core competition.' },
+        { question: 'Which skill remains central in wheelchair curling?', options: ['Reading weight and line', 'Running to the house', 'Jumping from the hack', 'Carrying the stones'], correctIndex: 0, explanation: 'Delivery accuracy, ice reading, and strategy remain essential.' }
+      ]
+    },
+    {
+      id: 'round-21',
+      title: 'Round #21: Junior Curling',
+      themeCategory: 'Development',
+      questions: [
+        { question: 'What does junior curling primarily provide?', options: ['A development pathway for young athletes', 'A no-score practice only', 'A separate type of granite', 'A professional timeout'], correctIndex: 0, explanation: 'Junior programs develop technical skills, strategy, and sportsmanship.' },
+        { question: 'Which skill should a developing curler learn first?', options: ['Safe, balanced delivery mechanics', 'Calling television broadcasts', 'Measuring every stone', 'Throwing only takeouts'], correctIndex: 0, explanation: 'Balance and control create the foundation for every shot.' },
+        { question: 'Why are team roles useful for junior teams?', options: ['They teach communication and responsibility', 'They prevent players from learning delivery', 'They eliminate strategy', 'They guarantee a win'], correctIndex: 0, explanation: 'Roles help players understand teamwork and game flow.' },
+        { question: 'What is a good junior curling habit?', options: ['Practice both draw and takeout weight', 'Only throw hard', 'Ignore the skip', 'Sweep without watching the rock'], correctIndex: 0, explanation: 'A broad skill set prepares players for varied game situations.' },
+        { question: 'What value is central to youth curling?', options: ['Respect for teammates and opponents', 'Winning at any cost', 'Avoiding communication', 'Never conceding'], correctIndex: 0, explanation: 'The Spirit of Curling is central at every level.' }
+      ]
+    },
+    {
+      id: 'round-22',
+      title: 'Round #22: Spirit of Curling',
+      themeCategory: 'Sportsmanship',
+      questions: [
+        { question: 'What does the Spirit of Curling emphasize?', options: ['Honesty, respect, and self-policing', 'Arguing every measure', 'Hiding burned stones', 'Winning without handshakes'], correctIndex: 0, explanation: 'Curlers are expected to compete hard while honoring the game and opponents.' },
+        { question: 'What should a player do after burning a moving stone?', options: ['Immediately acknowledge it', 'Hide the contact', 'Wait for an official to notice', 'Throw another stone'], correctIndex: 0, explanation: 'Players are expected to call their own violations.' },
+        { question: 'What is broomstacking?', options: ['Post-game socializing between teams', 'A broom repair method', 'A sweeping drill', 'A stone measurement'], correctIndex: 0, explanation: 'Broomstacking is the traditional social gathering after a game.' },
+        { question: 'What should happen before a match?', options: ['Teams greet and wish each other good curling', 'The skips hide the stones', 'The lead measures the house', 'The score is decided'], correctIndex: 0, explanation: 'A greeting and handshake reflect curling’s tradition of respect.' },
+        { question: 'Why might a team concede?', options: ['The result is no longer realistically in doubt', 'They want to change the ice', 'They dislike the house', 'They have no broom'], correctIndex: 0, explanation: 'Conceding respectfully avoids unnecessary play when the outcome is settled.' }
+      ]
+    },
+    {
+      id: 'round-23',
+      title: 'Round #23: Shoes, Brooms & Gear',
+      themeCategory: 'Equipment',
+      questions: [
+        { question: 'What does a gripper provide?', options: ['Traction', 'Maximum sliding speed', 'Stone rotation', 'A scoring measurement'], correctIndex: 0, explanation: 'The gripper sole helps a player walk and push safely.' },
+        { question: 'What does a slider provide?', options: ['Low-friction glide', 'Extra grip', 'Stone weight', 'A house boundary'], correctIndex: 0, explanation: 'A slider sole lets the delivery foot move smoothly across the ice.' },
+        { question: 'What is a modern curling broom head commonly made from?', options: ['Synthetic fabric', 'Granite', 'Glass', 'Leather only'], correctIndex: 0, explanation: 'Synthetic brush fabrics are durable and consistent for sweeping.' },
+        { question: 'Why do curlers keep the broom head clean?', options: ['To avoid transferring debris to the ice', 'To make it heavier', 'To change the stone handle', 'To increase the house size'], correctIndex: 0, explanation: 'Clean equipment helps protect the running path.' },
+        { question: 'What is a stabilizer used for?', options: ['Balance during delivery', 'Measuring the button', 'Sweeping a takeout', 'Marking the hog line'], correctIndex: 0, explanation: 'A stabilizer supports balance for players who use one during delivery.' }
+      ]
+    },
+    {
+      id: 'round-24',
+      title: 'Round #24: Delivery Mechanics',
+      themeCategory: 'Technique',
+      questions: [
+        { question: 'What is the hack used for?', options: ['Pushing into the delivery slide', 'Scoring points', 'Stopping a stone', 'Measuring curl'], correctIndex: 0, explanation: 'The hack gives the delivering player a firm starting point.' },
+        { question: 'What does release refer to?', options: ['Letting go of the handle', 'Stopping the timer', 'Calling a timeout', 'Removing a guard'], correctIndex: 0, explanation: 'Release is the moment the hand leaves the stone handle.' },
+        { question: 'Why is balance important in delivery?', options: ['It helps control line, weight, and rotation', 'It makes the stone larger', 'It changes the house', 'It removes the need for sweeping'], correctIndex: 0, explanation: 'A stable slide creates repeatable deliveries.' },
+        { question: 'What is draw weight?', options: ['Weight intended to stop in the house', 'Weight intended to remove a stone', 'The player’s body weight', 'The stone’s legal maximum'], correctIndex: 0, explanation: 'Draw weight is controlled speed for a stone that finishes in scoring territory.' },
+        { question: 'What is takeout weight?', options: ['Speed intended to hit and remove a stone', 'A slow freeze weight', 'The weight of the broom', 'A measurement reading'], correctIndex: 0, explanation: 'Takeout weight is firm enough to contact and move another stone.' }
+      ]
+    },
+    {
+      id: 'round-25',
+      title: 'Round #25: Penalties & Violations',
+      themeCategory: 'Rules',
+      questions: [
+        { question: 'What is a hogged stone?', options: ['A stone that fails to cross the far hog line', 'A stone in the button', 'A stolen point', 'A stone with no handle'], correctIndex: 0, explanation: 'A stone that does not completely cross the far hog line is removed.' },
+        { question: 'What is a burned stone?', options: ['A moving stone touched by a person or equipment', 'A stone that hits the board', 'A stone with a red handle', 'A stone in the house'], correctIndex: 0, explanation: 'Burning means accidentally touching a stone while it is in motion.' },
+        { question: 'What should happen when a stone crosses a sideline?', options: ['It is out of play', 'It scores two points', 'It becomes a guard', 'It returns to the hack'], correctIndex: 0, explanation: 'A stone contacting or crossing the side boundary is removed from play.' },
+        { question: 'Why must players release before the hog line?', options: ['It is a delivery rule', 'It makes the stone curl twice', 'It protects the handle', 'It awards the hammer'], correctIndex: 0, explanation: 'Late release is a hog-line violation and can make the stone invalid.' },
+        { question: 'Who normally resolves a rules dispute during a match?', options: ['The designated umpire or chief umpire', 'The audience', 'The lead alone', 'The ice maker only'], correctIndex: 0, explanation: 'Officials apply the rules when teams cannot resolve an issue themselves.' }
+      ]
+    },
+    {
+      id: 'round-26',
+      title: 'Round #26: House Geometry',
+      themeCategory: 'Sheet Knowledge',
+      questions: [
+        { question: 'What is the center line?', options: ['The line running lengthwise down the sheet', 'The outer house ring', 'The hog line', 'The sideboard'], correctIndex: 0, explanation: 'The center line divides the sheet from hack to hack.' },
+        { question: 'What is the tee line?', options: ['The line through the center of the house', 'The far boundary', 'The center line', 'The backboard'], correctIndex: 0, explanation: 'The tee line crosses the center of the house and marks front and back.' },
+        { question: 'What is the back line?', options: ['The line behind the house', 'The line at the hack', 'The center line', 'The free guard boundary'], correctIndex: 0, explanation: 'The back line forms the rear boundary of the scoring area.' },
+        { question: 'What is a corner guard?', options: ['A guard placed wide of the center line', 'A stone in the button', 'A stone behind the back line', 'A broom position'], correctIndex: 0, explanation: 'Corner guards protect wide-side scoring routes.' },
+        { question: 'What does “in the house” mean?', options: ['A stone is inside or touching the outer ring', 'A player is in the clubhouse', 'A stone crossed the hog line', 'A team called timeout'], correctIndex: 0, explanation: 'Any portion of a stone inside or touching the 12-foot ring is in the house.' }
+      ]
+    },
+    {
+      id: 'round-27',
+      title: 'Round #27: Situational Strategy',
+      themeCategory: 'Game Strategy',
+      questions: [
+        { question: 'Why might a team throw a guard early in an end?', options: ['To protect a future scoring path', 'To concede the end', 'To remove its own stone', 'To stop the clock'], correctIndex: 0, explanation: 'Guards create cover for later draws and raises.' },
+        { question: 'What is an open end?', options: ['An end with few blocking stones', 'An end with no score', 'An end without a skip', 'An extra end'], correctIndex: 0, explanation: 'Open ends favor direct takeouts and visible paths.' },
+        { question: 'What is a cluttered end?', options: ['An end with many stones and complicated angles', 'An empty sheet', 'A short game', 'A game without sweeping'], correctIndex: 0, explanation: 'More stones create more defensive cover and ricochet possibilities.' },
+        { question: 'Why play a freeze behind a guard?', options: ['To create a protected scoring stone', 'To remove every stone', 'To give up the hammer', 'To change the ice'], correctIndex: 0, explanation: 'A freeze can place a stone in scoring position where it is difficult to hit.' },
+        { question: 'What is risk management in curling?', options: ['Choosing shots that fit the score and end situation', 'Always throwing maximum weight', 'Never using guards', 'Ignoring the hammer'], correctIndex: 0, explanation: 'Good strategy balances scoring upside against giving the opponent an opening.' }
+      ]
+    },
+    {
+      id: 'round-28',
+      title: 'Round #28: Bonspiel Culture',
+      themeCategory: 'Curling Culture',
+      questions: [
+        { question: 'What is a bonspiel?', options: ['A curling tournament', 'A type of takeout', 'A stone polish', 'A scoring ring'], correctIndex: 0, explanation: 'Bonspiel is the traditional name for a curling tournament.' },
+        { question: 'What does a draw-to-the-button contest often determine?', options: ['Who gets hammer first', 'Who sweeps first', 'The final score', 'The ice temperature'], correctIndex: 0, explanation: 'Teams may draw to the button before a game to determine last-rock advantage.' },
+        { question: 'What does round robin mean at a bonspiel?', options: ['Each team plays the others in its group', 'One team plays alone', 'Every game is a final', 'No games are scored'], correctIndex: 0, explanation: 'Round-robin standings come from games against all teams in the group.' },
+        { question: 'What is a spiel draw?', options: ['The schedule of games', 'A draw shot', 'A house measurement', 'A broom design'], correctIndex: 0, explanation: 'The spiel draw is the tournament schedule and game assignment.' },
+        { question: 'Why are curling clubs important?', options: ['They provide facilities and community for the sport', 'They replace the rules', 'They manufacture all granite', 'They eliminate teams'], correctIndex: 0, explanation: 'Clubs support ice, leagues, instruction, and curling culture.' }
+      ]
+    },
+    {
+      id: 'round-29',
+      title: 'Round #29: Scottish Roots',
+      themeCategory: 'Curling History',
+      questions: [
+        { question: 'Which country is widely recognized as curling’s birthplace?', options: ['Scotland', 'Canada', 'Norway', 'Sweden'], correctIndex: 0, explanation: 'Scotland is the historic birthplace of organized curling.' },
+        { question: 'What is Ailsa Craig known for?', options: ['Granite used in curling stones', 'The first curling club in Canada', 'A famous broom factory', 'The longest sheet'], correctIndex: 0, explanation: 'Ailsa Craig granite is prized for durable stone running surfaces.' },
+        { question: 'What does “roaring game” describe?', options: ['The sound of stones on pebble', 'A loud crowd tradition', 'A Scottish dance', 'A timeout call'], correctIndex: 0, explanation: 'The phrase refers to the rumble of granite on ice.' },
+        { question: 'What is a traditional Scottish curling gathering called?', options: ['A bonspiel', 'A regatta', 'A derby', 'A regale'], correctIndex: 0, explanation: 'Bonspiel is used throughout the curling world.' },
+        { question: 'What natural condition helped early curling develop?', options: ['Reliable freezing weather', 'Tropical beaches', 'Desert nights', 'Volcanic soil'], correctIndex: 0, explanation: 'Frozen lochs and ponds provided early playing surfaces.' }
+      ]
+    },
+    {
+      id: 'round-30',
+      title: 'Round #30: Olympic Curling',
+      themeCategory: 'Olympic History',
+      questions: [
+        { question: 'Which event returned curling to the Olympic program in 1998?', options: ['Nagano Winter Games', 'Atlanta Summer Games', 'Calgary Winter Games', 'Sydney Summer Games'], correctIndex: 0, explanation: 'Curling returned as a full medal sport at Nagano 1998.' },
+        { question: 'What Olympic curling formats are traditionally contested?', options: ['Men’s, women’s, and Mixed Doubles', 'Only singles', 'Only men’s team', 'Pairs and triples only'], correctIndex: 0, explanation: 'The Olympic program includes team events and Mixed Doubles.' },
+        { question: 'What is an Olympic curling team pursuing?', options: ['A medal', 'A club membership', 'A bonspiel schedule', 'A new house size'], correctIndex: 0, explanation: 'Olympic teams compete for gold, silver, and bronze medals.' },
+        { question: 'What does qualification determine?', options: ['Which teams earn Olympic entry', 'Which stones are legal', 'The ice temperature', 'The number of sweepers'], correctIndex: 0, explanation: 'Qualification events and rankings determine Olympic participation.' },
+        { question: 'Why is Olympic curling strategically demanding?', options: ['Games combine precise shots with long tournament pressure', 'There is no scoring', 'Every shot is a takeout', 'Only one end is played'], correctIndex: 0, explanation: 'Teams must sustain execution and decision-making across a major event.' }
+      ]
+    },
+    {
+      id: 'round-31',
+      title: 'Round #31: Timing & Statistics',
+      themeCategory: 'Competition Systems',
+      questions: [
+        { question: 'What does thinking time measure?', options: ['Time available for a team to make decisions', 'Stone travel time only', 'Ice preparation time', 'The length of a timeout'], correctIndex: 0, explanation: 'Thinking time tracks the time a team uses between shots to plan.' },
+        { question: 'What is a shot percentage intended to describe?', options: ['A player’s execution rating', 'The score of an end', 'The house diameter', 'The number of rocks'], correctIndex: 0, explanation: 'Shot percentage estimates how well a player executed assigned shots.' },
+        { question: 'What is a steal percentage?', options: ['How often a team scores without hammer', 'The number of stolen stones', 'The time a skip thinks', 'The number of guards'], correctIndex: 0, explanation: 'It measures success scoring when the opponent has last rock.' },
+        { question: 'What does a perfect game mean in this trivia app?', options: ['All five questions correct', 'A blank end', 'No sweeping', 'Five takeouts'], correctIndex: 0, explanation: 'A perfect trivia round scores all 500 available points.' },
+        { question: 'Why do teams track statistics?', options: ['To evaluate patterns and improve decisions', 'To replace the skip', 'To change the rules', 'To avoid practice'], correctIndex: 0, explanation: 'Stats reveal strengths, weaknesses, and tactical trends.' }
+      ]
+    },
+    {
+      id: 'round-32',
+      title: 'Round #32: Advanced Ice Science',
+      themeCategory: 'Ice Science',
+      questions: [
+        { question: 'What is ice curl mainly influenced by?', options: ['Rotation, friction, and the ice surface', 'The handle color only', 'The scoreboard', 'The player’s jersey'], correctIndex: 0, explanation: 'Curl emerges from the interaction of rotation, running band, and ice.' },
+        { question: 'What does a nipper do?', options: ['Trims pebble on the ice', 'Measures the button', 'Polishes handles', 'Sweeps behind the tee'], correctIndex: 0, explanation: 'Nipping levels the tops of frozen droplets after pebbling.' },
+        { question: 'Why might ice be re-pebbled during an event?', options: ['To restore a consistent playing surface', 'To change the score', 'To remove the house', 'To make stones heavier'], correctIndex: 0, explanation: 'Fresh pebble helps maintain predictable speed and curl.' },
+        { question: 'What can temperature variation across a sheet cause?', options: ['Uneven speed or curl', 'More players', 'A larger button', 'Automatic steals'], correctIndex: 0, explanation: 'Temperature differences affect friction and ice behavior.' },
+        { question: 'Why is purified water useful for pebbling?', options: ['It creates more consistent droplets', 'It adds weight to stones', 'It colors the ice', 'It prevents all curl'], correctIndex: 0, explanation: 'Fewer impurities help technicians create stable pebble.' }
+      ]
+    },
+    {
+      id: 'round-33',
+      title: 'Round #33: Team Roles & Communication',
+      themeCategory: 'Team Play',
+      questions: [
+        { question: 'What does the lead usually do?', options: ['Throws the first two stones', 'Calls every final shot', 'Measures every rock', 'Runs the scoreboard'], correctIndex: 0, explanation: 'The lead starts the end and often establishes guards or draws.' },
+        { question: 'What does the second usually do?', options: ['Throws the third and fourth stones', 'Only sweeps', 'Never enters the house', 'Calls the coin toss'], correctIndex: 0, explanation: 'The second handles the team’s third and fourth deliveries.' },
+        { question: 'What does the vice-skip often do?', options: ['Holds the house when the skip delivers', 'Prepares all ice', 'Runs the timer only', 'Chooses the stones'], correctIndex: 0, explanation: 'The vice-skip communicates the target and manages the house for skip shots.' },
+        { question: 'Why must calls be concise?', options: ['The stone and sweeping window move quickly', 'The game has no strategy', 'The audience cannot hear', 'It changes the house'], correctIndex: 0, explanation: 'Short calls help teammates react before the stone passes the target.' },
+        { question: 'What makes a good team discussion?', options: ['Clear options, shared information, and a final decision', 'Everyone speaking at once', 'Ignoring the score', 'Changing calls mid-delivery without reason'], correctIndex: 0, explanation: 'Strong teams combine information and commit to a shot.' }
+      ]
+    },
+    {
+      id: 'round-34',
+      title: 'Round #34: Broadcast & Match Language',
+      themeCategory: 'Curling Language',
+      questions: [
+        { question: 'What does “with the hammer” mean?', options: ['Having the final stone of the end', 'Holding a broom', 'Winning the last end', 'Throwing a takeout'], correctIndex: 0, explanation: 'The hammer is the last-rock advantage.' },
+        { question: 'What does “playing the scoreboard” mean?', options: ['Choosing tactics based on the score and ends remaining', 'Reading the screen only', 'Changing the score manually', 'Avoiding all risks'], correctIndex: 0, explanation: 'The score influences whether a team attacks, defends, or protects a lead.' },
+        { question: 'What is a biter?', options: ['A stone barely touching the outer ring', 'A sharp broom', 'A noisy crowd', 'A fast takeout'], correctIndex: 0, explanation: 'A biter just touches the 12-foot ring.' },
+        { question: 'What is a nose hit?', options: ['A direct hit leaving the shooter near its original line', 'A draw to the button', 'A guard at the side', 'A missed release'], correctIndex: 0, explanation: 'A nose hit contacts the target close to straight on.' },
+        { question: 'What is a raise?', options: ['Using one stone to move another forward', 'Lifting a broom', 'Adding a player', 'Increasing the score by rule'], correctIndex: 0, explanation: 'A raise redirects a friendly or opponent stone to a new position.' }
+      ]
+    },
+    {
+      id: 'round-35',
+      title: 'Round #35: Masterclass Mixed Review',
+      themeCategory: 'Advanced Mixed Topics',
+      questions: [
+        { question: 'A team has hammer and needs two points. Which setup usually offers the best attacking chance?', options: ['Protected corner guards and multiple scoring stones', 'An empty sheet with no stones', 'A hogged stone', 'A conceded end'], correctIndex: 0, explanation: 'Cover and multiple rocks create options for the final shot.' },
+        { question: 'A stone is touching the 12-foot ring but is farther from the button than the opponent’s closest stone. What happens?', options: ['It does not score', 'It scores one automatically', 'It becomes a guard', 'It restarts the end'], correctIndex: 0, explanation: 'Only stones closer than the opponent’s best stone count.' },
+        { question: 'Why can a freeze be safer than a draw into open space?', options: ['It uses an existing stone as protection', 'It always scores two', 'It needs no weight control', 'It removes the hammer'], correctIndex: 0, explanation: 'A tight freeze is difficult for an opponent to remove cleanly.' },
+        { question: 'Which combination most directly affects a stone’s final path?', options: ['Release rotation, delivery weight, and sweeping', 'Jersey color, crowd size, and score font', 'Handle color, shoe brand, and club name', 'End number only'], correctIndex: 0, explanation: 'Those delivery and sweeping variables control line and finish.' },
+        { question: 'What best summarizes high-level curling?', options: ['Precision delivery joined to communication and tactical planning', 'Throwing every stone as hard as possible', 'Scoring without considering position', 'Sweeping without reading the ice'], correctIndex: 0, explanation: 'Curling combines technical execution, teamwork, conditions, and strategy.' }
+      ]
     }
   ];
 
+  const validatePuzzleSets = () => {
+    const ids = new Set();
+    PUZZLE_SETS.forEach((puzzle, puzzleIndex) => {
+      if (!puzzle || !puzzle.id || ids.has(puzzle.id)) {
+        throw new Error(`Invalid or duplicate round at position ${puzzleIndex + 1}`);
+      }
+      if (!Array.isArray(puzzle.questions) || puzzle.questions.length !== 5) {
+        throw new Error(`Round ${puzzle.id} must contain exactly five questions`);
+      }
+      const questions = new Set();
+      puzzle.questions.forEach((item, questionIndex) => {
+        if (!item || typeof item.question !== 'string' || questions.has(item.question) || !Array.isArray(item.options) || item.options.length !== 4 || !Number.isInteger(item.correctIndex) || item.correctIndex < 0 || item.correctIndex > 3) {
+          throw new Error(`Invalid or duplicate question in ${puzzle.id} at position ${questionIndex + 1}`);
+        }
+        questions.add(item.question);
+      });
+      ids.add(puzzle.id);
+    });
+  };
+
+  validatePuzzleSets();
+
   const STORAGE_KEY = 'THE_BUTTON_CURLING_STATE_V2';
-  const ANCHOR_EPOCH = new Date('2025-01-01T00:00:00Z').getTime();
+  const ANCHOR_EPOCH = new Date('2026-09-07T00:00:00').getTime();
 
   const StateManager = {
     data: {
       completedPuzzles: {},
       activeGame: null,
+      dailyAssignments: {},
+      lastAssignedIndex: -1,
       stats: {
         played: 0,
         perfectSweeps: 0,
@@ -598,10 +922,11 @@
               totalQuestionsAnswered: 0,
               totalQuestionsCorrect: 0
             }, parsed.stats || {});
+            this.data.dailyAssignments = parsed.dailyAssignments || {};
+            this.data.lastAssignedIndex = Number.isInteger(parsed.lastAssignedIndex) ? parsed.lastAssignedIndex : -1;
           }
         }
       } catch (e) {
-        // proceed with defaults
       }
       this.reconcileStreak();
     },
@@ -610,7 +935,6 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
       } catch (e) {
-        // quota exceeded or private mode
       }
     },
 
@@ -646,10 +970,36 @@
     },
 
     getDailyPuzzleIndex() {
-      const now = new Date();
-      const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      const dayCount = Math.max(0, Math.floor((todayMidnight - ANCHOR_EPOCH) / (1000 * 60 * 60 * 24)));
-      return dayCount % PUZZLE_SETS.length;
+      const today = this.getTodayIso();
+      const epochDate = new Date(ANCHOR_EPOCH);
+      const todayDate = new Date(`${today}T00:00:00`);
+      const dayCount = Math.max(0, Math.floor((todayDate - epochDate) / (1000 * 60 * 60 * 24)));
+      let previousIndex = Number.isInteger(this.data.lastAssignedIndex) ? this.data.lastAssignedIndex : -1;
+
+      for (let offset = 0; offset <= dayCount; offset++) {
+        const assignedDate = new Date(epochDate);
+        assignedDate.setDate(assignedDate.getDate() + offset);
+        const dateKey = `${assignedDate.getFullYear()}-${String(assignedDate.getMonth() + 1).padStart(2, '0')}-${String(assignedDate.getDate()).padStart(2, '0')}`;
+
+        if (!Number.isInteger(this.data.dailyAssignments[dateKey])) {
+          previousIndex = (previousIndex + 1) % PUZZLE_SETS.length;
+          this.data.dailyAssignments[dateKey] = previousIndex;
+        } else {
+          previousIndex = this.data.dailyAssignments[dateKey];
+        }
+      }
+
+      this.data.lastAssignedIndex = previousIndex;
+      this.save();
+      return this.data.dailyAssignments[today] || 0;
+    },
+
+    getReleasedPuzzleIndices() {
+      const today = this.getTodayIso();
+      this.getDailyPuzzleIndex();
+      return new Set(Object.entries(this.data.dailyAssignments)
+        .filter(([date]) => date < today)
+        .map(([, index]) => index));
     },
 
     getSanitizedPuzzles() {
@@ -689,7 +1039,8 @@
       const dailyIdx = this.getDailyPuzzleIndex();
       const today = sanitized[dailyIdx] || sanitized[0];
 
-      return { today, archive: sanitized };
+      const released = this.getReleasedPuzzleIndices();
+      return { today, archive: sanitized.filter(puzzle => released.has(puzzle.poolIndex) && puzzle.poolIndex !== dailyIdx) };
     },
 
     recordEndCompleted(puzzleId, isDaily, score, answers) {
@@ -721,7 +1072,6 @@
         const lastDaily = this.data.stats.lastPlayedDaily;
 
         if (lastDaily === todayIso) {
-          // maintain current streak
         } else if (lastDaily === yesterdayIso) {
           this.data.stats.currentStreak += 1;
         } else {
