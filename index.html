@@ -3,297 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Curling Trivia — Curling Puzzles</title>
-  <meta name="description" content="Daily curling trivia puzzle. Test your knowledge of rocks, strategy, ice conditions, and championship history.">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Daily Quiz — Canadian Curling Ice Edition</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <!-- Ambient Physical Curling Rink Background Canvas with Granite Collision Physics -->
-  <canvas id="curling-bg-canvas" aria-hidden="true"></canvas>
+  <!-- Ambient Atmospheric Ice Layer & Floating Curling Graphics -->
+  <div class="ice-atmosphere-bg" aria-hidden="true">
+    <div class="ice-glow-spot light-spot-1"></div>
+    <div class="ice-glow-spot light-spot-2"></div>
+    <div class="ice-pebble-mesh"></div>
+    <div class="rink-vignette"></div>
+    <div id="curlingAmbienceTrack" class="curling-ambience-layer"></div>
+  </div>
 
-  <!-- Accessibility Live Region for Screen Readers -->
-  <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- Shared Platform Shell -->
-  <div id="app-shell" class="app-shell">
-    
-    <!-- Top Platform Header -->
-    <header class="app-header" role="banner">
+  <div class="app-container">
+    <!-- Application / Championship Header -->
+    <header class="app-header" id="appHeader">
       <div class="header-left">
-        <button id="header-back-btn" class="icon-btn" aria-label="Back to Main Menu" hidden>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
+        <button id="headerBackBtn" class="btn btn-icon btn-back hidden" aria-label="Back to Menu">
+          <span class="btn-arrow" aria-hidden="true">←</span>
+          <span class="btn-label-text">Back</span>
         </button>
-        <div class="brand-badge">
-          <!-- Stylized Granite Curling Stone SVG Icon -->
-          <svg class="brand-stone-icon" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <ellipse cx="16" cy="19" rx="13" ry="8" fill="#153B5D" stroke="#102F4A" stroke-width="1.5"/>
-            <ellipse cx="16" cy="18" rx="10" ry="5.5" fill="#1E4C70"/>
-            <path d="M12 14.5C12 11 13.8 9 16 9H19C20.5 9 21.5 10 21.5 11.2C21.5 12.4 20.5 13.2 18.5 13.2H16" stroke="#F0C647" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="12" cy="14.5" r="1.6" fill="#F0C647"/>
-          </svg>
-          <span class="brand-text">CURLING PUZZLES</span>
+      </div>
+
+      <div class="header-center">
+        <div class="header-brand-wrap">
+          <div class="header-brand-ornament left-ornament" aria-hidden="true">
+            <svg viewBox="0 0 298.72 341.12" class="brand-maple-svg">
+              <path class="leaf-path-fill" d="m325.8 480.69 8.1527-20.11-65.765-60.873 17.392-9.2397-7.6092-44.568 39.676 4.3481 11.957-16.849 30.98 39.133-17.392-84.788 26.089 8.6962 25.001-45.655 23.371 44.568 27.719-7.6092-17.936 84.244 30.98-38.046 10.87 16.305 39.133-3.8046-5.9786 42.937 17.936 11.414-65.765 60.33 7.0656 21.197-58.699-9.7832 1.6305 72.83h-22.284l3.2611-73.374z" transform="translate(-250.85 -233.44)"/>
+            </svg>
+          </div>
+          <h1 id="appHeaderTitle" class="header-title">Daily Quiz</h1>
+          <div class="header-brand-ornament right-ornament" aria-hidden="true">
+            <svg viewBox="0 0 298.72 341.12" class="brand-maple-svg">
+              <path class="leaf-path-fill" d="m325.8 480.69 8.1527-20.11-65.765-60.873 17.392-9.2397-7.6092-44.568 39.676 4.3481 11.957-16.849 30.98 39.133-17.392-84.788 26.089 8.6962 25.001-45.655 23.371 44.568 27.719-7.6092-17.936 84.244 30.98-38.046 10.87 16.305 39.133-3.8046-5.9786 42.937 17.936 11.414-65.765 60.33 7.0656 21.197-58.699-9.7832 1.6305 72.83h-22.284l3.2611-73.374z" transform="translate(-250.85 -233.44)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="header-subbar" aria-hidden="true">
+          <span class="subbar-line red-line"></span>
+          <span class="subbar-dot yellow-dot"></span>
+          <span class="subbar-line blue-line"></span>
         </div>
       </div>
 
       <div class="header-right">
-        <button id="sound-btn" class="glass-pill-btn" aria-label="Toggle Sound Effects" aria-pressed="true">
-          <svg id="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-          <svg id="sound-icon-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
-            <line x1="1" y1="1" x2="23" y2="23"></line>
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M23 9l-6 6M17 9l6 6"></path>
-          </svg>
-          <span id="sound-label" class="sound-text">Sound: ON</span>
-        </button>
+        <button id="soundToggleBtn" class="btn btn-icon btn-sound" aria-label="Toggle Sound">🔊</button>
       </div>
     </header>
 
-    <!-- SCREEN 1: DEDICATED MAIN MENU -->
-    <main id="screen-menu" class="view-screen active" role="region" aria-label="Main Menu">
-      <div class="menu-container">
-        
-        <!-- Game Title Block -->
-        <div class="title-block">
-          <div class="subtitle-wrapper">
-            <span class="canadian-leaf-accent" aria-hidden="true">🍁</span>
-            <span class="curriculum-tag">DAILY 5-END TRIVIA</span>
+    <main id="mainContent" class="main-content">
+      <!-- Status & Loading View -->
+      <section id="statusView" class="panel status-view" aria-live="polite">
+        <div class="card status-card ice-glass-card">
+          <div class="stone-loading-indicator" aria-hidden="true">
+            <div class="stone-spinner-ring"></div>
+            <div class="stone-spinner-core"></div>
           </div>
-          <h1 class="game-main-title">TRIVIA</h1>
-          <p class="game-tagline">Test your knowledge of the roaring game.</p>
+          <h2 id="statusTitle" class="card-headline">Preparing Ice</h2>
+          <p id="statusMessage" class="text-muted">Loading championship puzzle data...</p>
+          <button id="statusRetryBtn" class="btn btn-primary hidden">Retry</button>
         </div>
+      </section>
 
-        <!-- Hero Card: Today's Puzzle (Primary CTA) -->
-        <section class="liquid-card hero-card" aria-labelledby="today-heading">
-          <div class="card-glow" aria-hidden="true"></div>
-          <div class="hero-top-row">
-            <span class="badge-accent" id="menu-today-badge">TODAY</span>
-            <span class="match-date-str" id="menu-today-date">Loading date...</span>
+      <!-- Main Menu View: Daily Puzzle → Vault → Home -->
+      <section id="menuView" class="panel hidden">
+        <!-- 1. Daily Puzzle -->
+        <article class="card menu-card primary-destination ice-glass-card red-stone-focus">
+          <div class="card-top-accent"></div>
+          <div class="card-header-row">
+            <span class="destination-label">
+              <span class="indicator-dot red-dot" aria-hidden="true"></span>
+              Daily Puzzle
+            </span>
+            <span id="menuTodayStatus" class="badge">Not Started</span>
           </div>
-          <h2 id="today-heading" class="hero-puzzle-title">Daily Match #0</h2>
-          <div class="hero-meta-row">
-            <span class="meta-item" id="menu-difficulty-label">5 Questions • World Rules</span>
-            <span class="status-indicator" id="menu-today-status">Not Played</span>
-          </div>
-          <button id="play-today-btn" class="btn btn-primary btn-block">
-            <span class="btn-text">Play Today</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </section>
-
-        <!-- Secondary Actions Grid: Vault & Universal Home -->
-        <div class="menu-action-grid">
-          <!-- Vault Button -->
-          <button id="open-vault-btn" class="liquid-card secondary-card text-left" aria-label="Open Match Vault">
-            <div class="card-icon-circle accent-red">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </div>
-            <div class="card-info">
-              <h3 class="secondary-title">Vault</h3>
-              <p class="secondary-desc">Past released matches</p>
-            </div>
-          </button>
-
-          <!-- Universal Home Button -->
-          <a href="https://tileworksgamesstudio.github.io/Curling-Menu/" class="liquid-card secondary-card text-left" id="home-link" aria-label="Return to Curling Menu">
-            <div class="card-icon-circle accent-yellow">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-            </div>
-            <div class="card-info">
-              <h3 class="secondary-title">Home</h3>
-              <p class="secondary-desc">All curling games</p>
-            </div>
-          </a>
-        </div>
-
-        <!-- Lifetime Record Summary Ribbon -->
-        <section class="liquid-card stats-ribbon" aria-label="Lifetime Statistics">
-          <div class="stat-col">
-            <span class="stat-value" id="stats-played">0</span>
-            <span class="stat-lbl">Played</span>
-          </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat-col">
-            <span class="stat-value" id="stats-accuracy">0%</span>
-            <span class="stat-lbl">Accuracy</span>
-          </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat-col">
-            <span class="stat-value" id="stats-streak">0</span>
-            <span class="stat-lbl">Streak</span>
-          </div>
-        </section>
-
-      </div>
-    </main>
-
-    <!-- SCREEN 2: ACTIVE TRIVIA GAME BOARD -->
-    <main id="screen-game" class="view-screen" role="region" aria-label="Trivia Match Board" hidden>
-      <div class="game-container">
-        
-        <!-- Top Board Bar -->
-        <div class="board-top-panel">
-          <div class="match-info-tag">
-            <span id="game-day-label" class="game-day-pill">Today</span>
-            <span id="game-category-tag" class="category-pill">Curling Basics</span>
-          </div>
-
-          <!-- 5 Ends Curling Stone Progress Tracker -->
-          <div class="ends-tracker" id="ends-tracker" role="group" aria-label="Match Ends Tracker">
-            <div class="end-stone-slot current" data-end="0" aria-label="End 1">
-              <div class="stone-disc"></div>
-              <span class="end-num">1</span>
-            </div>
-            <div class="end-stone-slot" data-end="1" aria-label="End 2">
-              <div class="stone-disc"></div>
-              <span class="end-num">2</span>
-            </div>
-            <div class="end-stone-slot" data-end="2" aria-label="End 3">
-              <div class="stone-disc"></div>
-              <span class="end-num">3</span>
-            </div>
-            <div class="end-stone-slot" data-end="3" aria-label="End 4">
-              <div class="stone-disc"></div>
-              <span class="end-num">4</span>
-            </div>
-            <div class="end-stone-slot" data-end="4" aria-label="End 5">
-              <div class="stone-disc"></div>
-              <span class="end-num">5</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hero Question Surface -->
-        <article class="liquid-card question-hero-card">
-          <div class="question-header">
-            <span class="question-step" id="question-step-label">End 1 of 5</span>
-            <span class="difficulty-tag" id="question-difficulty-label">Medium</span>
-          </div>
-          <h2 id="trivia-question-text" class="question-title">Loading question...</h2>
-        </article>
-
-        <!-- Four Multi-Choice Answer Options -->
-        <section class="options-container" id="options-group" role="radiogroup" aria-labelledby="trivia-question-text">
-          <button class="option-btn" data-index="0" role="radio" aria-checked="false">
-            <span class="choice-key" aria-hidden="true">A</span>
-            <span class="choice-text">Option 1</span>
-            <span class="feedback-icon" aria-hidden="true"></span>
-          </button>
-          <button class="option-btn" data-index="1" role="radio" aria-checked="false">
-            <span class="choice-key" aria-hidden="true">B</span>
-            <span class="choice-text">Option 2</span>
-            <span class="feedback-icon" aria-hidden="true"></span>
-          </button>
-          <button class="option-btn" data-index="2" role="radio" aria-checked="false">
-            <span class="choice-key" aria-hidden="true">C</span>
-            <span class="choice-text">Option 3</span>
-            <span class="feedback-icon" aria-hidden="true"></span>
-          </button>
-          <button class="option-btn" data-index="3" role="radio" aria-checked="false">
-            <span class="choice-key" aria-hidden="true">D</span>
-            <span class="choice-text">Option 4</span>
-            <span class="feedback-icon" aria-hidden="true"></span>
-          </button>
-        </section>
-
-        <!-- Instant Explanation & Next End Drawer -->
-        <div id="explanation-card" class="liquid-card explanation-card" hidden>
-          <div class="explanation-content">
-            <div class="explanation-title-row">
-              <span id="explanation-result-tag" class="result-tag-correct">Right on the Button!</span>
-            </div>
-            <p id="explanation-body-text" class="explanation-text">Curling fact explanation goes here.</p>
-          </div>
-          <button id="next-question-btn" class="btn btn-primary btn-next">
-            <span id="next-btn-text">Next End</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
-
-      </div>
-    </main>
-
-    <!-- SCREEN 3: VAULT ARCHIVE -->
-    <main id="screen-vault" class="view-screen" role="region" aria-label="Puzzle Vault" hidden>
-      <div class="vault-container">
-        <div class="vault-header">
-          <h2 class="section-heading">Match Vault</h2>
-          <p class="section-subtext">Play previously released daily matches.</p>
-        </div>
-        <div id="vault-items-list" class="vault-grid">
-          <!-- Dynamically populated strictly with previously released days -->
-        </div>
-      </div>
-    </main>
-
-    <!-- SCREEN 4: RESULTS MODAL -->
-    <div id="results-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="results-title" hidden>
-      <div class="liquid-card modal-card">
-        
-        <!-- House Ring Concentric Graphic -->
-        <div class="house-graphic" aria-hidden="true">
-          <div class="ring blue-ring">
-            <div class="ring white-ring">
-              <div class="ring red-ring">
-                <div class="ring button-pin"></div>
+          <div class="card-headline-group">
+            <h2 id="menuTodayDate" class="card-headline">Today's Puzzle</h2>
+            <div class="status-row">
+              <span class="streak-label">Streak Record</span>
+              <div class="streak-badge-wrap">
+                <span class="stone-mini-icon" aria-hidden="true">🥌</span>
+                <strong id="menuStreakCount" class="streak-value">0</strong>
               </div>
             </div>
           </div>
+          <button id="playTodayBtn" class="btn btn-primary btn-stone-red">Play</button>
+        </article>
+
+        <!-- 2. Vault -->
+        <article class="card menu-card ice-glass-card yellow-stone-focus">
+          <div class="card-header-row">
+            <span class="destination-label">
+              <span class="indicator-dot yellow-dot" aria-hidden="true"></span>
+              The Vault
+            </span>
+            <span id="vaultCountBadge" class="badge">0</span>
+          </div>
+          <h2 class="card-headline">Previous Puzzles</h2>
+          <p class="text-muted">Browse and play historical matches and archived daily challenges.</p>
+          <button id="openVaultBtn" class="btn btn-secondary">Open Vault</button>
+        </article>
+
+        <!-- 3. Home -->
+        <article class="card menu-card ice-glass-card">
+          <div class="card-header-row">
+            <span class="destination-label">
+              <span class="indicator-dot blue-dot" aria-hidden="true"></span>
+              Hub
+            </span>
+          </div>
+          <p class="text-muted">Return to the central tournament portal.</p>
+          <button id="homeBtn" class="btn btn-secondary">Return Home</button>
+        </article>
+      </section>
+
+      <!-- Gameplay View -->
+      <section id="gameView" class="panel hidden">
+        <!-- Status & Stepper Tracker -->
+        <div class="game-meta scoreboard-bar">
+          <div class="game-mode-pill">
+            <span class="game-mode-dot" aria-hidden="true"></span>
+            <span id="gameModeLabel" class="game-mode-label">Daily Puzzle</span>
+          </div>
+          <div id="stepperTrack" class="stepper-track" aria-label="Puzzle progress" role="group"></div>
         </div>
 
-        <h2 id="results-title" class="results-heading">Match Completed!</h2>
-        <p id="results-subtitle" class="results-subheading">You scored 5 out of 5 button shots.</p>
-
-        <!-- Visual End Stones Breakdown -->
-        <div class="results-stone-row" id="results-stone-row" aria-label="End results breakdown">
-          <!-- Generated stones -->
+        <!-- Central Game Board -->
+        <div class="game-board-card ice-glass-card" id="gameBoard">
+          <div class="rink-lines-subtle" aria-hidden="true"></div>
+          <h2 id="questionText" class="question-text">Question</h2>
+          <div id="optionsContainer" class="options-container" role="radiogroup" aria-label="Question choices"></div>
         </div>
 
-        <!-- Shareable Button -->
-        <div class="share-box">
-          <button id="share-results-btn" class="btn btn-secondary btn-block">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-              <polyline points="16 6 12 2 8 6"></polyline>
-              <line x1="12" y1="2" x2="12" y2="15"></line>
+        <!-- Supporting text & feedback below board -->
+        <div id="explanationPanel" class="explanation-panel ice-glass-card hidden" aria-live="polite">
+          <div class="explanation-header">
+            <span id="answerIndicator" class="answer-badge"></span>
+            <h3 class="explanation-title">Coach Notes</h3>
+          </div>
+          <p id="explanationText" class="explanation-text"></p>
+          <button id="nextQuestionBtn" class="btn btn-primary btn-stone-red">Next</button>
+        </div>
+      </section>
+
+      <!-- Results View -->
+      <section id="resultsView" class="panel hidden">
+        <div class="card text-center results-card ice-glass-card">
+          <div class="results-leaf-badge" aria-hidden="true">
+            <svg viewBox="0 0 298.72 341.12" class="results-maple-svg">
+              <path class="leaf-path-fill" d="m325.8 480.69 8.1527-20.11-65.765-60.873 17.392-9.2397-7.6092-44.568 39.676 4.3481 11.957-16.849 30.98 39.133-17.392-84.788 26.089 8.6962 25.001-45.655 23.371 44.568 27.719-7.6092-17.936 84.244 30.98-38.046 10.87 16.305 39.133-3.8046-5.9786 42.937 17.936 11.414-65.765 60.33 7.0656 21.197-58.699-9.7832 1.6305 72.83h-22.284l3.2611-73.374z" transform="translate(-250.85 -233.44)"/>
             </svg>
-            <span id="share-btn-text">Share Score</span>
-          </button>
+          </div>
+          <h2 id="resultsHeadline" class="results-title">End of the Match</h2>
+          <div class="score-container">
+            <span id="scoreValue" class="score-value">0</span>
+            <span id="scoreTotal" class="score-total">/ 5</span>
+          </div>
+          <div id="resultsBreakdown" class="results-breakdown" aria-label="Results breakdown"></div>
+
+          <div class="action-stack">
+            <button id="shareScoreBtn" class="btn btn-primary btn-stone-red">Share Score</button>
+            <div class="button-row">
+              <button id="reviewQuizBtn" class="btn btn-secondary">Review</button>
+              <button id="resultsVaultBtn" class="btn btn-secondary">Vault</button>
+            </div>
+            <button id="resultsMenuBtn" class="btn btn-secondary">Menu</button>
+          </div>
         </div>
+      </section>
 
-        <!-- Bottom Return Actions -->
-        <div class="results-actions">
-          <button id="results-replay-btn" class="btn btn-ghost">Play Again</button>
-          <button id="results-menu-btn" class="btn btn-primary">Done</button>
+      <!-- Vault (Archive) View -->
+      <section id="vaultView" class="panel hidden">
+        <div class="card vault-card ice-glass-card">
+          <div class="card-header-row vault-header">
+            <div>
+              <h2 class="card-headline">The Vault</h2>
+              <span class="text-muted" id="vaultSubtext">Past Puzzles</span>
+            </div>
+            <span class="vault-curling-icon" aria-hidden="true">🥌</span>
+          </div>
+          <p id="vaultEmptyMsg" class="text-muted hidden">No previous puzzles available yet.</p>
+          <div id="vaultList" class="vault-list" role="list"></div>
         </div>
+      </section>
+    </main>
 
-      </div>
-    </div>
-
+    <!-- Accessible Toast Feedback -->
+    <div id="toastMessage" class="toast" role="status" aria-live="polite"></div>
   </div>
 
-  <script src="puzzles.js"></script>
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>

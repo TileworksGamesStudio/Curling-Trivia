@@ -1,1020 +1,851 @@
 /**
- * CURLING PUZZLES: TRIVIA ENGINE & CONTINUITY RUNTIME
- * Continuity Standard: Day 0 = 8 September 2026. Day 1 = 9 September 2026.
- * Features:
- * - HTML5 Canvas 2D Granite Collision Physics Engine (Accumulator Timestep)
- * - Manufactured Curling Stone Rendering (Contact Shadow, Granite Body, Micro-lip, 3D Handle)
- * - Web Audio API Procedural Granite Synthesizer
- * - Ambient Rink Density Switching (Quieter Gameplay vs. Richer Menu)
- * - Future Puzzle Protection & Versioned LocalStorage Persistence
- * - Full Screen-Reader & Keyboard Accessibility
+ * UNIVERSAL GAME ENGINE — DAILY QUIZ
+ * Canadian Curling Ice & Championship Presentation Upgrade
+ * Adheres to the Master Visual Update Bible & Section 65.6 Asset Standard
  */
-
-(() => {
+(function () {
   'use strict';
 
-  /* ==========================================================================
-     1. DATE SCHEDULING ENGINE & CONTINUITY BASELINE
-     ========================================================================== */
-  const EPOCH_YEAR = 2026;
-  const EPOCH_MONTH = 8; // September (0-indexed)
-  const EPOCH_DAY = 8;
-  const EPOCH_TIMESTAMP = Date.UTC(EPOCH_YEAR, EPOCH_MONTH, EPOCH_DAY, 0, 0, 0);
-
-  const STORAGE_VERSION = 'v3.0';
-  const STORAGE_KEYS = {
-    SOUND: `curling_trivia_sound_${STORAGE_VERSION}`,
-    STATE: `curling_trivia_state_${STORAGE_VERSION}`,
-    STATS: `curling_trivia_stats_${STORAGE_VERSION}`
+  const CONFIG = {
+    csvPath: './puzzles.csv',
+    storageKey: 'universal_daily_quiz_state',
+    storageVersion: 1,
+    homeUrl: 'https://tileworksgamesstudio.github.io/Curling-Menu/'
   };
 
-  function getCurrentDayIndex() {
-    const now = new Date();
-    const currentUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0);
-    const diffDays = Math.floor((currentUTC - EPOCH_TIMESTAMP) / (1000 * 60 * 60 * 24));
-    return diffDays >= 0 ? diffDays : 0;
-  }
+  // --- AUTHORITATIVE MAPLE LEAF ASSET (SECTION 65.6) ---
+  // Pure geometry, no background rectangle or canvas layer
+  const MAPLE_LEAF_PATH = 'm325.8 480.69 8.1527-20.11-65.765-60.873 17.392-9.2397-7.6092-44.568 39.676 4.3481 11.957-16.849 30.98 39.133-17.392-84.788 26.089 8.6962 25.001-45.655 23.371 44.568 27.719-7.6092-17.936 84.244 30.98-38.046 10.87 16.305 39.133-3.8046-5.9786 42.937 17.936 11.414-65.765 60.33 7.0656 21.197-58.699-9.7832 1.6305 72.83h-22.284l3.2611-73.374z';
 
-  function getFormattedDate(dayIndex) {
-    const target = new Date(EPOCH_TIMESTAMP + dayIndex * 86400000);
-    return target.toLocaleDateString('en-US', {
-      timeZone: 'UTC',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  }
+  // --- 12 DISTINCT CURLING VECTOR MOTIFS (SECTION 10) ---
+  const CURLING_ICONS = [
+    // 1. Curling Stone
+    '<svg viewBox="0 0 48 48"><circle cx="24" cy="27" r="17" fill="#081B2E"/><ellipse cx="24" cy="25" rx="14" ry="7" fill="#D71920"/><path d="M19 14h10v6H19z" fill="#FFC700"/><path d="M22 10h10v4H22z" fill="#081B2E"/></svg>',
+    // 2. Curling House / Rings
+    '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="none" stroke="#081B2E" stroke-width="2.5"/><circle cx="24" cy="24" r="15" fill="none" stroke="#D71920" stroke-width="3"/><circle cx="24" cy="24" r="8" fill="none" stroke="#BACDE0" stroke-width="2"/><circle cx="24" cy="24" r="3" fill="#D71920"/></svg>',
+    // 3. Curling Broom
+    '<svg viewBox="0 0 48 48"><line x1="10" y1="38" x2="36" y2="10" stroke="#081B2E" stroke-width="3.5" stroke-linecap="round"/><rect x="6" y="34" width="12" height="6" rx="2" transform="rotate(-45 12 37)" fill="#FFC700" stroke="#081B2E" stroke-width="1.5"/></svg>',
+    // 4. Brush Head
+    '<svg viewBox="0 0 48 48"><rect x="10" y="18" width="28" height="12" rx="3" fill="#D71920" stroke="#081B2E" stroke-width="2"/><line x1="14" y1="24" x2="34" y2="24" stroke="#FFFFFF" stroke-width="2"/><line x1="24" y1="12" x2="24" y2="18" stroke="#081B2E" stroke-width="3"/></svg>',
+    // 5. Hack
+    '<svg viewBox="0 0 48 48"><rect x="14" y="26" width="20" height="8" rx="2" fill="#081B2E"/><rect x="16" y="16" width="6" height="10" fill="#BACDE0"/><rect x="26" y="16" width="6" height="10" fill="#BACDE0"/></svg>',
+    // 6. Curling Stone Handle
+    '<svg viewBox="0 0 48 48"><path d="M14 28h20v-6a6 6 0 0 0-6-6h-8a6 6 0 0 0-6 6v6z" fill="none" stroke="#D71920" stroke-width="4" stroke-linecap="round"/><circle cx="16" cy="30" r="3" fill="#081B2E"/><circle cx="32" cy="30" r="3" fill="#081B2E"/></svg>',
+    // 7. Hog Line
+    '<svg viewBox="0 0 48 48"><line x1="4" y1="24" x2="44" y2="24" stroke="#D71920" stroke-width="5" stroke-linecap="round"/><line x1="4" y1="18" x2="44" y2="18" stroke="#081B2E" stroke-width="1.5" stroke-dasharray="3,3"/><line x1="4" y1="30" x2="44" y2="30" stroke="#081B2E" stroke-width="1.5" stroke-dasharray="3,3"/></svg>',
+    // 8. Back Line
+    '<svg viewBox="0 0 48 48"><line x1="6" y1="24" x2="42" y2="24" stroke="#081B2E" stroke-width="4"/><circle cx="24" cy="24" r="5" fill="#FFC700" stroke="#081B2E" stroke-width="1.5"/></svg>',
+    // 9. Centre Line
+    '<svg viewBox="0 0 48 48"><line x1="24" y1="6" x2="24" y2="42" stroke="#BACDE0" stroke-width="4"/><line x1="16" y1="24" x2="32" y2="24" stroke="#D71920" stroke-width="2.5"/></svg>',
+    // 10. Ice Pebble Cluster
+    '<svg viewBox="0 0 48 48"><circle cx="18" cy="18" r="3" fill="#081B2E"/><circle cx="30" cy="16" r="2.5" fill="#BACDE0"/><circle cx="24" cy="26" r="3.5" fill="#BACDE0"/><circle cx="14" cy="32" r="2" fill="#081B2E"/><circle cx="32" cy="32" r="3" fill="#081B2E"/></svg>',
+    // 11. End Scoreboard Indicator
+    '<svg viewBox="0 0 48 48"><rect x="8" y="12" width="32" height="24" rx="2" fill="#081B2E"/><text x="24" y="28" fill="#FFC700" font-size="14" font-weight="900" text-anchor="middle" font-family="sans-serif">8</text></svg>',
+    // 12. Skip / Throwing Marker
+    '<svg viewBox="0 0 48 48"><circle cx="28" cy="14" r="4" fill="#081B2E"/><path d="M12 36l10-8 6 4 10-10" fill="none" stroke="#D71920" stroke-width="3" stroke-linecap="round"/><line x1="14" y1="36" x2="20" y2="36" stroke="#081B2E" stroke-width="3"/></svg>'
+  ];
 
-  /* ==========================================================================
-     2. PROCEDURAL SOUND SYNTHESIZER (Web Audio API)
-     ========================================================================== */
-  class CurlingAudio {
-    constructor() {
-      this.ctx = null;
-      this.enabled = true;
-      this.initFromStorage();
+  // --- AMBIENT CURLING & MAPLE LEAF SYSTEM ---
+  class IceAmbience {
+    constructor(containerEl) {
+      this.container = containerEl;
+      this.activeEntities = 0;
+      this.maxEntities = 11;
+      this.spawnTimer = null;
+      this.init();
     }
 
-    initFromStorage() {
-      const saved = localStorage.getItem(STORAGE_KEYS.SOUND);
-      this.enabled = saved !== null ? saved === 'true' : true;
+    init() {
+      if (!this.container) return;
+      // Start spawning periodically
+      this.spawn();
+      this.spawnTimer = setInterval(() => {
+        if (this.activeEntities < this.maxEntities) {
+          this.spawn();
+        }
+      }, 2400);
     }
 
-    toggle() {
-      this.enabled = !this.enabled;
-      try {
-        localStorage.setItem(STORAGE_KEYS.SOUND, this.enabled.toString());
-      } catch (e) {
-        console.warn('Storage error', e);
+    spawn() {
+      if (!this.container) return;
+      const el = document.createElement('div');
+      el.className = 'ambient-curling-entity';
+
+      // Decide whether it is a Canadian Maple Leaf or one of the 12 Curling motifs
+      const isMaple = Math.random() < 0.28;
+      let svgHtml = '';
+
+      if (isMaple) {
+        svgHtml = `<svg viewBox="0 0 298.72 341.12" aria-hidden="true"><path d="${MAPLE_LEAF_PATH}" transform="translate(-250.85 -233.44)" fill="${Math.random() > 0.4 ? '#D71920' : '#081B2E'}"/></svg>`;
+      } else {
+        const iconIndex = Math.floor(Math.random() * CURLING_ICONS.length);
+        svgHtml = CURLING_ICONS[iconIndex];
       }
-      return this.enabled;
+
+      el.innerHTML = svgHtml;
+
+      // Spatial depth variation (Section 14)
+      const depth = Math.random();
+      let size, duration, maxOpacity;
+      if (depth < 0.35) {
+        // Distant
+        size = 18 + Math.random() * 8;
+        duration = 24 + Math.random() * 8;
+        maxOpacity = 0.16;
+      } else if (depth < 0.75) {
+        // Middle
+        size = 28 + Math.random() * 10;
+        duration = 18 + Math.random() * 6;
+        maxOpacity = 0.24;
+      } else {
+        // Near
+        size = 40 + Math.random() * 12;
+        duration = 13 + Math.random() * 4;
+        maxOpacity = 0.32;
+      }
+
+      const startLeft = Math.random() * 92;
+      const drift = (Math.random() - 0.5) * 60;
+      const rot = (Math.random() - 0.5) * 90;
+
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.left = `${startLeft}%`;
+      el.style.animationDuration = `${duration}s`;
+      el.style.setProperty('--entity-max-opacity', maxOpacity);
+      el.style.setProperty('--entity-drift', `${drift}px`);
+      el.style.setProperty('--entity-rot', `${rot}deg`);
+
+      this.container.appendChild(el);
+      this.activeEntities++;
+
+      setTimeout(() => {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        this.activeEntities--;
+      }, duration * 1000);
+    }
+  }
+
+  // --- RESTRAINED TACTILE SOUND SYNTHESIS ---
+  class SoundManager {
+    constructor(enabled = true) {
+      this.enabled = enabled;
+      this.ctx = null;
     }
 
-    ensureContext() {
-      if (!this.ctx) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx) this.ctx = new AudioCtx();
+    init() {
+      if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       }
       if (this.ctx && this.ctx.state === 'suspended') {
         this.ctx.resume();
       }
     }
 
-    playGraniteClack(volume = 0.2) {
+    tone(freq, type = 'sine', duration = 0.1, gainVal = 0.08) {
       if (!this.enabled) return;
-      this.ensureContext();
+      this.init();
       if (!this.ctx) return;
-
-      const t = this.ctx.currentTime;
-      const osc1 = this.ctx.createOscillator();
-      const osc2 = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      // Dual frequencies simulate solid granite density
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(680, t);
-      osc1.frequency.exponentialRampToValueAtTime(240, t + 0.06);
-
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(950, t);
-      osc2.frequency.exponentialRampToValueAtTime(320, t + 0.05);
-
-      gain.gain.setValueAtTime(Math.min(0.28, Math.max(0.04, volume)), t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc1.start(t);
-      osc2.start(t);
-      osc1.stop(t + 0.08);
-      osc2.stop(t + 0.08);
-    }
-
-    playSelect() {
-      if (!this.enabled) return;
-      this.ensureContext();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, t);
-      osc.frequency.exponentialRampToValueAtTime(580, t + 0.04);
-
-      gain.gain.setValueAtTime(0.08, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.06);
-    }
-
-    playCorrect() {
-      if (!this.enabled) return;
-      this.ensureContext();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      const triad = [523.25, 659.25, 783.99]; // C5, E5, G5 major triad
-
-      triad.forEach((freq, i) => {
+      try {
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, t + i * 0.05);
-        gain.gain.setValueAtTime(0.12, t + i * 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.05 + 0.28);
-
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        osc.start(t + i * 0.05);
-        osc.stop(t + i * 0.05 + 0.3);
-      });
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      } catch (e) {
+        // Silent fallback
+      }
     }
 
-    playIncorrect() {
-      if (!this.enabled) return;
-      this.ensureContext();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(200, t);
-      osc.frequency.exponentialRampToValueAtTime(120, t + 0.16);
-
-      gain.gain.setValueAtTime(0.12, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.19);
+    tap() {
+      // Solid muted stone contact tap
+      this.tone(260, 'triangle', 0.04, 0.07);
     }
 
-    playComplete() {
-      if (!this.enabled) return;
-      this.ensureContext();
-      if (!this.ctx) return;
-      const chord = [523.25, 659.25, 783.99, 1046.5];
-      const t = this.ctx.currentTime;
-      chord.forEach((freq, i) => {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, t + i * 0.06);
-        gain.gain.setValueAtTime(0.11, t + i * 0.06);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.52);
+    correct() {
+      // Two-layer chime
+      this.tone(523.25, 'sine', 0.1, 0.08);
+      setTimeout(() => this.tone(659.25, 'sine', 0.14, 0.07), 65);
+    }
 
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(t + i * 0.06);
-        osc.stop(t + i * 0.06 + 0.54);
+    incorrect() {
+      // Soft low stone thump
+      this.tone(190, 'sawtooth', 0.14, 0.06);
+    }
+
+    complete() {
+      // Restrained completion chime
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+        setTimeout(() => this.tone(f, 'sine', 0.16, 0.07), i * 70);
       });
     }
   }
 
-  /* ==========================================================================
-     3. AUTHENTIC CURLING PHYSICS & CANVAS RENDERER
-     ========================================================================== */
-  class CurlingBackground {
-    constructor(audioSys) {
-      this.audio = audioSys;
-      this.canvas = document.getElementById('curling-bg-canvas');
-      this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
-      this.stones = [];
-      this.running = true;
-      this.mode = 'menu'; // 'menu' | 'game'
-      this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // --- DEFENSIVE LOCAL STORAGE ---
+  const Storage = {
+    load() {
+      const fallback = {
+        version: CONFIG.storageVersion,
+        sound: true,
+        streak: 0,
+        lastCompletedDate: null,
+        history: {},
+        inProgress: null
+      };
 
-      // Fixed timestep accumulator parameters
-      this.lastTime = performance.now();
-      this.accumulator = 0;
-      this.fixedDelta = 1000 / 60; // 60Hz physics
+      try {
+        const raw = localStorage.getItem(CONFIG.storageKey);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        if (typeof parsed !== 'object' || parsed === null) return fallback;
+        return {
+          version: parsed.version || CONFIG.storageVersion,
+          sound: typeof parsed.sound === 'boolean' ? parsed.sound : true,
+          streak: typeof parsed.streak === 'number' ? parsed.streak : 0,
+          lastCompletedDate: parsed.lastCompletedDate || null,
+          history: parsed.history && typeof parsed.history === 'object' ? parsed.history : {},
+          inProgress: parsed.inProgress && typeof parsed.inProgress === 'object' ? parsed.inProgress : null
+        };
+      } catch (e) {
+        return fallback;
+      }
+    },
+    save(state) {
+      try {
+        localStorage.setItem(CONFIG.storageKey, JSON.stringify(state));
+      } catch (e) {}
+    }
+  };
 
-      // Ambient takeout launch counter
-      this.nextTakeoutTime = performance.now() + 18000;
+  // --- RFC 4180 CSV PARSER ---
+  function parseCsv(text) {
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
 
-      if (this.canvas && this.ctx) {
-        this.resize();
-        window.addEventListener('resize', () => this.resize(), { passive: true });
-        this.initStones();
-        if (!this.reducedMotion) {
-          requestAnimationFrame((t) => this.loop(t));
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      const next = text[i + 1];
+
+      if (c === '"') {
+        if (inQuotes && next === '"') {
+          field += '"';
+          i++;
         } else {
-          this.draw();
+          inQuotes = !inQuotes;
         }
+      } else if (c === ',' && !inQuotes) {
+        row.push(field.trim());
+        field = '';
+      } else if ((c === '\n' || (c === '\r' && next === '\n')) && !inQuotes) {
+        if (c === '\r') i++;
+        row.push(field.trim());
+        rows.push(row);
+        row = [];
+        field = '';
+      } else {
+        field += c;
       }
     }
+    if (field || row.length > 0) {
+      row.push(field.trim());
+      rows.push(row);
+    }
 
-    setMode(mode) {
-      this.mode = mode;
-      // In game mode, slow down stones and keep fewer active for low distraction
-      this.stones.forEach((s, idx) => {
-        if (mode === 'game' && idx >= 3) {
-          s.active = false;
-        } else {
-          s.active = true;
-        }
+    if (rows.length < 2) throw new Error('Data format invalid or missing.');
+    const headers = rows[0].map(h => h.toLowerCase());
+    const records = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i].length === 1 && rows[i][0] === '') continue;
+      const obj = {};
+      headers.forEach((h, idx) => {
+        obj[h] = rows[i][idx] !== undefined ? rows[i][idx] : '';
       });
+      records.push(obj);
     }
-
-    resize() {
-      this.width = this.canvas.width = window.innerWidth;
-      this.height = this.canvas.height = window.innerHeight;
-    }
-
-    initStones() {
-      const isNarrow = this.width < 600;
-      const count = isNarrow ? 5 : 7;
-      this.stones = [];
-
-      for (let i = 0; i < count; i++) {
-        const radius = isNarrow ? 22 : 28;
-        const isYellow = (i % 2 === 0);
-        this.stones.push({
-          x: (this.width / (count + 1)) * (i + 1),
-          y: Math.random() * (this.height - radius * 4) + radius * 2,
-          vx: (Math.random() - 0.5) * 0.45,
-          vy: (Math.random() - 0.5) * 0.45,
-          radius: radius,
-          mass: radius * radius,
-          team: isYellow ? 'yellow' : 'red',
-          handleColor: isYellow ? '#f0c647' : '#d63b3b',
-          handleTrim: isYellow ? '#d8aa32' : '#b92e34',
-          angle: Math.random() * Math.PI * 2,
-          spin: (Math.random() - 0.5) * 0.005,
-          active: true
-        });
-      }
-    }
-
-    loop(currentTime) {
-      if (!this.running) return;
-      const frameDelta = Math.min(currentTime - this.lastTime, 100);
-      this.lastTime = currentTime;
-      this.accumulator += frameDelta;
-
-      while (this.accumulator >= this.fixedDelta) {
-        this.stepPhysics(this.fixedDelta / 1000);
-        this.accumulator -= this.fixedDelta;
-      }
-
-      // Check infrequent ambient high-speed delivery
-      if (currentTime > this.nextTakeoutTime && this.mode === 'menu') {
-        this.triggerTakeoutEvent();
-        this.nextTakeoutTime = currentTime + 22000 + Math.random() * 14000;
-      }
-
-      this.draw();
-      requestAnimationFrame((t) => this.loop(t));
-    }
-
-    triggerTakeoutEvent() {
-      const activeStones = this.stones.filter(s => s.active);
-      if (activeStones.length === 0) return;
-      const target = activeStones[Math.floor(Math.random() * activeStones.length)];
-      target.vx = (Math.random() > 0.5 ? 1 : -1) * (1.6 + Math.random() * 0.8);
-      target.vy = (Math.random() - 0.5) * 1.2;
-      target.spin = (Math.random() - 0.5) * 0.02;
-    }
-
-    stepPhysics(dt) {
-      const activeStones = this.stones.filter(s => s.active);
-      const count = activeStones.length;
-      const speedScale = (this.mode === 'game') ? 0.6 : 1.0;
-
-      // 1. Position & Ice Pebble Friction
-      for (let i = 0; i < count; i++) {
-        const s = activeStones[i];
-        s.x += s.vx * speedScale;
-        s.y += s.vy * speedScale;
-        s.angle += s.spin;
-
-        // Subtle friction deceleration modeled after curling ice
-        s.vx *= 0.9994;
-        s.vy *= 0.9994;
-
-        // Keep minimum gentle drift in menu
-        const currentSpeed = Math.hypot(s.vx, s.vy);
-        if (currentSpeed < 0.12 && this.mode === 'menu') {
-          s.vx += (Math.random() - 0.5) * 0.03;
-          s.vy += (Math.random() - 0.5) * 0.03;
-        }
-
-        // Cushion boundary rebound
-        if (s.x - s.radius < 0) {
-          s.x = s.radius;
-          s.vx = Math.abs(s.vx);
-        } else if (s.x + s.radius > this.width) {
-          s.x = this.width - s.radius;
-          s.vx = -Math.abs(s.vx);
-        }
-
-        if (s.y - s.radius < 0) {
-          s.y = s.radius;
-          s.vy = Math.abs(s.vy);
-        } else if (s.y + s.radius > this.height) {
-          s.y = this.height - s.radius;
-          s.vy = -Math.abs(s.vy);
-        }
-      }
-
-      // 2. Pairwise Collision & Momentum Transfer
-      for (let i = 0; i < count; i++) {
-        for (let j = i + 1; j < count; j++) {
-          const a = activeStones[i];
-          const b = activeStones[j];
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const dist = Math.hypot(dx, dy);
-          const minDist = a.radius + b.radius;
-
-          if (dist < minDist && dist > 0) {
-            const nx = dx / dist;
-            const ny = dy / dist;
-
-            // Positional penetration resolution (anti-sticking)
-            const overlap = (minDist - dist) * 0.5;
-            a.x -= nx * overlap;
-            a.y -= ny * overlap;
-            b.x += nx * overlap;
-            b.y += ny * overlap;
-
-            // Elastic collision with natural granite restitution
-            const kx = a.vx - b.vx;
-            const ky = a.vy - b.vy;
-            const impulse = 2 * (nx * kx + ny * ky) / (a.mass + b.mass);
-            const restitution = 0.76;
-
-            a.vx -= impulse * b.mass * nx * restitution;
-            a.vy -= impulse * b.mass * ny * restitution;
-            b.vx += impulse * a.mass * nx * restitution;
-            b.vy += impulse * a.mass * ny * restitution;
-
-            // Impact audio
-            const impactRelSpeed = Math.abs(impulse);
-            if (impactRelSpeed > 0.15) {
-              this.audio.playGraniteClack(Math.min(0.25, impactRelSpeed * 0.3));
-            }
-          }
-        }
-      }
-    }
-
-    draw() {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.drawRinkMarkings();
-
-      const activeStones = this.stones.filter(s => s.active);
-      for (let i = 0; i < activeStones.length; i++) {
-        this.drawCurlingStone(activeStones[i]);
-      }
-    }
-
-    drawRinkMarkings() {
-      const cx = this.width * 0.5;
-      const cy = this.height * 0.44;
-      const baseR = Math.min(this.width, this.height) * 0.44;
-
-      this.ctx.save();
-      this.ctx.lineWidth = 1.8;
-
-      // 12-foot Outer Blue House Ring
-      this.ctx.strokeStyle = 'rgba(21, 59, 93, 0.12)';
-      this.ctx.beginPath();
-      this.ctx.arc(cx, cy, baseR, 0, Math.PI * 2);
-      this.ctx.stroke();
-
-      // 8-foot White Ring Division
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
-      this.ctx.beginPath();
-      this.ctx.arc(cx, cy, baseR * 0.66, 0, Math.PI * 2);
-      this.ctx.stroke();
-
-      // 4-foot Inner Red Ring
-      this.ctx.strokeStyle = 'rgba(214, 59, 59, 0.12)';
-      this.ctx.beginPath();
-      this.ctx.arc(cx, cy, baseR * 0.33, 0, Math.PI * 2);
-      this.ctx.stroke();
-
-      // Centre Line & Tee Line
-      this.ctx.strokeStyle = 'rgba(21, 59, 93, 0.09)';
-      this.ctx.beginPath();
-      this.ctx.moveTo(cx, 0);
-      this.ctx.lineTo(cx, this.height);
-      this.ctx.moveTo(0, cy);
-      this.ctx.lineTo(this.width, cy);
-      this.ctx.stroke();
-
-      this.ctx.restore();
-    }
-
-    drawCurlingStone(s) {
-      this.ctx.save();
-      this.ctx.translate(s.x, s.y);
-      this.ctx.rotate(s.angle);
-
-      // 1. Soft Ice Contact Shadow
-      this.ctx.beginPath();
-      this.ctx.ellipse(2, 6, s.radius * 0.96, s.radius * 0.88, 0, 0, Math.PI * 2);
-      this.ctx.fillStyle = 'rgba(16, 47, 74, 0.18)';
-      this.ctx.fill();
-
-      // 2. Granite Stone Body Outer Bevel
-      const bodyGrad = this.ctx.createRadialGradient(-s.radius * 0.3, -s.radius * 0.3, s.radius * 0.1, 0, 0, s.radius);
-      bodyGrad.addColorStop(0, '#e2e8f0');
-      bodyGrad.addColorStop(0.35, '#94a3b8');
-      bodyGrad.addColorStop(0.78, '#475569');
-      bodyGrad.addColorStop(1, '#1e293b');
-
-      this.ctx.beginPath();
-      this.ctx.arc(0, 0, s.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = bodyGrad;
-      this.ctx.fill();
-      this.ctx.lineWidth = 1.5;
-      this.ctx.strokeStyle = 'rgba(16, 47, 74, 0.4)';
-      this.ctx.stroke();
-
-      // 3. Striking Band Matte Ring
-      this.ctx.beginPath();
-      this.ctx.arc(0, 0, s.radius * 0.85, 0, Math.PI * 2);
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-      this.ctx.lineWidth = 1.2;
-      this.ctx.stroke();
-
-      // 4. Granite Top Lip Cup Recess
-      const cupGrad = this.ctx.createRadialGradient(0, 0, 1, 0, 0, s.radius * 0.65);
-      cupGrad.addColorStop(0, '#64748b');
-      cupGrad.addColorStop(1, '#334155');
-
-      this.ctx.beginPath();
-      this.ctx.arc(0, 0, s.radius * 0.62, 0, Math.PI * 2);
-      this.ctx.fillStyle = cupGrad;
-      this.ctx.fill();
-
-      // 5. Handle Base Flange
-      this.ctx.beginPath();
-      this.ctx.arc(0, 0, s.radius * 0.28, 0, Math.PI * 2);
-      this.ctx.fillStyle = '#1e293b';
-      this.ctx.fill();
-
-      // 6. Gooseneck Curling Handle
-      const hLength = s.radius * 0.88;
-      const hWidth = s.radius * 0.22;
-
-      // Handle Shadow onto stone
-      this.ctx.beginPath();
-      this.ctx.roundRect(-hLength * 0.48, -hWidth * 0.4 + 2.5, hLength, hWidth, 4);
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-      this.ctx.fill();
-
-      // Handle Colored Grip Bar
-      this.ctx.beginPath();
-      this.ctx.roundRect(-hLength * 0.5, -hWidth * 0.5, hLength, hWidth, 4);
-      this.ctx.fillStyle = s.handleColor;
-      this.ctx.fill();
-      this.ctx.lineWidth = 1;
-      this.ctx.strokeStyle = s.handleTrim;
-      this.ctx.stroke();
-
-      // Central Mount Bolt
-      this.ctx.beginPath();
-      this.ctx.arc(0, 0, 3, 0, Math.PI * 2);
-      this.ctx.fillStyle = '#f8fafc';
-      this.ctx.fill();
-
-      this.ctx.restore();
-    }
+    return records;
   }
 
-  /* ==========================================================================
-     4. PERSISTENCE & STATS STORE
-     ========================================================================== */
-  class Store {
-    static getStats() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.STATS);
-        if (raw) return JSON.parse(raw);
-      } catch (e) {
-        console.warn('Error reading stats', e);
+  // --- DATE RESOLUTION ---
+  async function getTodayDateString() {
+    try {
+      const res = await fetch(window.location.href.split('#')[0].split('?')[0] + '?_t=' + Date.now(), {
+        method: 'HEAD',
+        cache: 'no-store'
+      });
+      const header = res.headers.get('Date');
+      if (header) {
+        const d = new Date(header);
+        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
       }
-      return { played: 0, won: 0, streak: 0, maxStreak: 0, totalCorrect: 0 };
-    }
-
-    static saveStats(stats) {
-      try {
-        localStorage.setItem(STORAGE_KEYS.STATS, JSON.stringify(stats));
-      } catch (e) {
-        console.warn('Error saving stats', e);
-      }
-    }
-
-    static getPuzzleState(dayIndex) {
-      try {
-        const raw = localStorage.getItem(`${STORAGE_KEYS.STATE}_day_${dayIndex}`);
-        if (raw) return JSON.parse(raw);
-      } catch (e) {
-        console.warn('Error reading state', e);
-      }
-      return null;
-    }
-
-    static savePuzzleState(dayIndex, state) {
-      try {
-        localStorage.setItem(`${STORAGE_KEYS.STATE}_day_${dayIndex}`, JSON.stringify(state));
-      } catch (e) {
-        console.warn('Error saving state', e);
-      }
-    }
-
-    static clearPuzzleState(dayIndex) {
-      try {
-        localStorage.removeItem(`${STORAGE_KEYS.STATE}_day_${dayIndex}`);
-      } catch (e) {
-        console.warn('Error clearing state', e);
-      }
-    }
+    } catch (e) {}
+    return new Date().toISOString().split('T')[0];
   }
 
-  /* ==========================================================================
-     5. TRIVIA APPLICATION CONTROLLER
-     ========================================================================== */
-  class TriviaApp {
+  function resolveAnswerIndex(val) {
+    const clean = String(val).trim().toUpperCase();
+    if (clean === 'A' || clean === '0') return 0;
+    if (clean === 'B' || clean === '1') return 1;
+    if (clean === 'C' || clean === '2') return 2;
+    if (clean === 'D' || clean === '3') return 3;
+    return 0;
+  }
+
+  // --- APPLICATION CONTROLLER ---
+  class UniversalQuiz {
     constructor() {
-      this.audio = new CurlingAudio();
-      this.bg = new CurlingBackground(this.audio);
+      this.state = Storage.load();
+      this.sound = new SoundManager(this.state.sound);
+      this.roundsByDate = {};
+      this.currentDate = null;
+      this.vaultDates = [];
 
-      this.currentTodayDay = getCurrentDayIndex();
-      this.activeMatchDay = this.currentTodayDay;
-      this.activePuzzleData = null;
-      this.activeQuestionIdx = 0;
-      this.userAnswers = [];
-      this.isMatchCompleted = false;
+      this.activeRound = null;
+      this.currentIndex = 0;
+      this.sessionAnswers = [];
+      this.isReview = false;
+      this.selectedAnswer = null;
 
       this.cacheDom();
       this.bindEvents();
-      this.hideResultsModal();
-      this.initView();
-      this.updateStatsUI();
+      this.updateSoundButton();
+
+      // Atmospheric floating background initiation
+      const bgTrack = document.getElementById('curlingAmbienceTrack');
+      if (bgTrack) {
+        this.ambience = new IceAmbience(bgTrack);
+      }
+
+      this.init();
     }
 
     cacheDom() {
-      this.screenMenu = document.getElementById('screen-menu');
-      this.screenGame = document.getElementById('screen-game');
-      this.screenVault = document.getElementById('screen-vault');
-      this.resultsModal = document.getElementById('results-modal');
-      this.srAnnouncer = document.getElementById('sr-announcer');
-
-      this.headerBackBtn = document.getElementById('header-back-btn');
-      this.soundBtn = document.getElementById('sound-btn');
-      this.soundIconOn = document.getElementById('sound-icon-on');
-      this.soundIconOff = document.getElementById('sound-icon-off');
-      this.soundLabel = document.getElementById('sound-label');
-
-      this.menuTodayDate = document.getElementById('menu-today-date');
-      this.todayHeading = document.getElementById('today-heading');
-      this.menuTodayStatus = document.getElementById('menu-today-status');
-      this.playTodayBtn = document.getElementById('play-today-btn');
-      this.openVaultBtn = document.getElementById('open-vault-btn');
-
-      this.statPlayed = document.getElementById('stats-played');
-      this.statAccuracy = document.getElementById('stats-accuracy');
-      this.statStreak = document.getElementById('stats-streak');
-
-      this.gameDayLabel = document.getElementById('game-day-label');
-      this.gameCategoryTag = document.getElementById('game-category-tag');
-      this.endsTracker = document.getElementById('ends-tracker');
-      this.questionStepLabel = document.getElementById('question-step-label');
-      this.questionDifficultyLabel = document.getElementById('question-difficulty-label');
-      this.questionText = document.getElementById('trivia-question-text');
-      this.optionsGroup = document.getElementById('options-group');
-      this.optionButtons = Array.from(this.optionsGroup.querySelectorAll('.option-btn'));
-
-      this.explanationCard = document.getElementById('explanation-card');
-      this.explanationResultTag = document.getElementById('explanation-result-tag');
-      this.explanationBodyText = document.getElementById('explanation-body-text');
-      this.nextQuestionBtn = document.getElementById('next-question-btn');
-      this.nextBtnText = document.getElementById('next-btn-text');
-
-      this.vaultItemsList = document.getElementById('vault-items-list');
-
-      this.resultsTitle = document.getElementById('results-title');
-      this.resultsSubtitle = document.getElementById('results-subtitle');
-      this.resultsStoneRow = document.getElementById('results-stone-row');
-      this.shareResultsBtn = document.getElementById('share-results-btn');
-      this.shareBtnText = document.getElementById('share-btn-text');
-      this.resultsReplayBtn = document.getElementById('results-replay-btn');
-      this.resultsMenuBtn = document.getElementById('results-menu-btn');
+      this.dom = {
+        appHeaderTitle: document.getElementById('appHeaderTitle'),
+        headerBackBtn: document.getElementById('headerBackBtn'),
+        soundToggleBtn: document.getElementById('soundToggleBtn'),
+        statusView: document.getElementById('statusView'),
+        statusTitle: document.getElementById('statusTitle'),
+        statusMessage: document.getElementById('statusMessage'),
+        statusRetryBtn: document.getElementById('statusRetryBtn'),
+        menuView: document.getElementById('menuView'),
+        menuTodayDate: document.getElementById('menuTodayDate'),
+        menuTodayStatus: document.getElementById('menuTodayStatus'),
+        menuStreakCount: document.getElementById('menuStreakCount'),
+        playTodayBtn: document.getElementById('playTodayBtn'),
+        vaultCountBadge: document.getElementById('vaultCountBadge'),
+        openVaultBtn: document.getElementById('openVaultBtn'),
+        homeBtn: document.getElementById('homeBtn'),
+        gameView: document.getElementById('gameView'),
+        gameModeLabel: document.getElementById('gameModeLabel'),
+        stepperTrack: document.getElementById('stepperTrack'),
+        questionText: document.getElementById('questionText'),
+        optionsContainer: document.getElementById('optionsContainer'),
+        explanationPanel: document.getElementById('explanationPanel'),
+        answerIndicator: document.getElementById('answerIndicator'),
+        explanationText: document.getElementById('explanationText'),
+        nextQuestionBtn: document.getElementById('nextQuestionBtn'),
+        resultsView: document.getElementById('resultsView'),
+        scoreValue: document.getElementById('scoreValue'),
+        scoreTotal: document.getElementById('scoreTotal'),
+        resultsBreakdown: document.getElementById('resultsBreakdown'),
+        shareScoreBtn: document.getElementById('shareScoreBtn'),
+        reviewQuizBtn: document.getElementById('reviewQuizBtn'),
+        resultsVaultBtn: document.getElementById('resultsVaultBtn'),
+        resultsMenuBtn: document.getElementById('resultsMenuBtn'),
+        vaultView: document.getElementById('vaultView'),
+        vaultList: document.getElementById('vaultList'),
+        vaultEmptyMsg: document.getElementById('vaultEmptyMsg'),
+        toastMessage: document.getElementById('toastMessage')
+      };
     }
 
     bindEvents() {
-      this.soundBtn.addEventListener('click', () => {
-        const enabled = this.audio.toggle();
-        this.updateSoundButtonUI(enabled);
+      this.dom.soundToggleBtn.addEventListener('click', () => {
+        this.sound.enabled = !this.sound.enabled;
+        this.state.sound = this.sound.enabled;
+        Storage.save(this.state);
+        this.updateSoundButton();
+        this.sound.tap();
       });
 
-      this.headerBackBtn.addEventListener('click', () => this.showScreen('menu'));
-      this.playTodayBtn.addEventListener('click', () => this.startMatch(this.currentTodayDay));
-      this.openVaultBtn.addEventListener('click', () => this.showVault());
-
-      this.optionButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.dataset.index, 10);
-          this.handleOptionSelect(idx);
-        });
+      this.dom.headerBackBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.showView('menuView');
       });
 
-      this.nextQuestionBtn.addEventListener('click', () => this.advanceNextQuestion());
-
-      this.resultsMenuBtn.addEventListener('click', () => {
-        this.hideResultsModal();
-        this.showScreen('menu');
+      this.dom.statusRetryBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.init();
       });
 
-      this.resultsReplayBtn.addEventListener('click', () => {
-        this.hideResultsModal();
-        Store.clearPuzzleState(this.activeMatchDay);
-        this.startMatch(this.activeMatchDay);
+      this.dom.playTodayBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.startRound(this.currentDate);
       });
 
-      this.shareResultsBtn.addEventListener('click', () => this.shareScore());
+      this.dom.openVaultBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.renderVault();
+      });
 
-      // Keyboard Accessibility
-      window.addEventListener('keydown', (e) => {
-        if (this.screenGame.classList.contains('active') && !this.resultsModal.classList.contains('is-open')) {
-          const key = e.key.toUpperCase();
-          if (['A', '1'].includes(key)) this.handleOptionSelect(0);
-          else if (['B', '2'].includes(key)) this.handleOptionSelect(1);
-          else if (['C', '3'].includes(key)) this.handleOptionSelect(2);
-          else if (['D', '4'].includes(key)) this.handleOptionSelect(3);
-          else if ((e.key === 'Enter' || e.key === ' ') && !this.explanationCard.hidden) {
-            this.advanceNextQuestion();
-          }
-        } else if (this.resultsModal.classList.contains('is-open') && e.key === 'Escape') {
-          this.hideResultsModal();
-          this.showScreen('menu');
-        }
+      this.dom.homeBtn.addEventListener('click', () => {
+        this.sound.tap();
+        window.location.href = CONFIG.homeUrl;
+      });
+
+      this.dom.nextQuestionBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.handleNextQuestion();
+      });
+
+      this.dom.shareScoreBtn.addEventListener('click', () => this.shareResults());
+
+      this.dom.reviewQuizBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.startReview();
+      });
+
+      this.dom.resultsVaultBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.renderVault();
+      });
+
+      this.dom.resultsMenuBtn.addEventListener('click', () => {
+        this.sound.tap();
+        this.showView('menuView');
       });
     }
 
-    announce(text) {
-      if (this.srAnnouncer) {
-        this.srAnnouncer.textContent = '';
-        setTimeout(() => { this.srAnnouncer.textContent = text; }, 50);
-      }
+    updateSoundButton() {
+      this.dom.soundToggleBtn.textContent = this.sound.enabled ? '🔊' : '🔇';
     }
 
-    updateSoundButtonUI(enabled) {
-      this.soundIconOn.hidden = !enabled;
-      this.soundIconOff.hidden = enabled;
-      this.soundLabel.textContent = enabled ? 'Sound: ON' : 'Sound: OFF';
-      this.soundBtn.setAttribute('aria-pressed', enabled.toString());
-    }
+    showView(viewName) {
+      const views = ['statusView', 'menuView', 'gameView', 'resultsView', 'vaultView'];
+      views.forEach(v => this.dom[v].classList.add('hidden'));
+      this.dom[viewName].classList.remove('hidden');
 
-    initView() {
-      this.updateSoundButtonUI(this.audio.enabled);
-      this.menuTodayDate.textContent = getFormattedDate(this.currentTodayDay);
-      this.todayHeading.textContent = `Daily Match #${this.currentTodayDay}`;
-
-      const state = Store.getPuzzleState(this.currentTodayDay);
-      if (state && state.completed) {
-        this.menuTodayStatus.textContent = `Completed (${state.score}/5)`;
-        this.menuTodayStatus.style.color = 'var(--curling-green-base)';
-        this.playTodayBtn.querySelector('.btn-text').textContent = 'Review Match';
-      } else if (state && state.answers && state.answers.length > 0) {
-        this.menuTodayStatus.textContent = `In Progress (${state.answers.length}/5)`;
-        this.menuTodayStatus.style.color = '#b45309';
-        this.playTodayBtn.querySelector('.btn-text').textContent = 'Continue Match';
+      if (viewName === 'menuView') {
+        this.dom.appHeaderTitle.textContent = 'Daily Quiz';
+        this.dom.headerBackBtn.classList.add('hidden');
+        this.renderMenu();
+      } else if (viewName === 'gameView') {
+        this.dom.appHeaderTitle.textContent = this.activeRound
+          ? (this.activeRound.date === this.currentDate ? 'Daily Puzzle' : `Vault: ${this.activeRound.date}`)
+          : 'Match';
+        this.dom.headerBackBtn.classList.remove('hidden');
+      } else if (viewName === 'vaultView') {
+        this.dom.appHeaderTitle.textContent = 'The Vault';
+        this.dom.headerBackBtn.classList.remove('hidden');
       } else {
-        this.menuTodayStatus.textContent = 'Not Played';
-        this.menuTodayStatus.style.color = '#b45309';
-        this.playTodayBtn.querySelector('.btn-text').textContent = 'Play Today';
+        this.dom.appHeaderTitle.textContent = 'Daily Quiz';
+        this.dom.headerBackBtn.classList.remove('hidden');
+      }
+      window.scrollTo(0, 0);
+    }
+
+    async init() {
+      this.dom.statusTitle.textContent = 'Preparing Ice';
+      this.dom.statusMessage.textContent = 'Loading championship puzzle data...';
+      this.dom.statusRetryBtn.classList.add('hidden');
+      this.showView('statusView');
+      this.dom.headerBackBtn.classList.add('hidden');
+
+      try {
+        const [csvRes, todayStr] = await Promise.all([
+          fetch(CONFIG.csvPath, { cache: 'no-store' }),
+          getTodayDateString()
+        ]);
+
+        if (!csvRes.ok) throw new Error('Could not load puzzles.csv.');
+        const csvText = await csvRes.text();
+        const records = parseCsv(csvText);
+
+        this.roundsByDate = {};
+        records.forEach(row => {
+          if (!row.date) return;
+          if (!this.roundsByDate[row.date]) this.roundsByDate[row.date] = [];
+          this.roundsByDate[row.date].push({
+            question: row.question || 'Question text missing.',
+            options: [
+              row.option_a || 'Option A',
+              row.option_b || 'Option B',
+              row.option_c || 'Option C',
+              row.option_d || 'Option D'
+            ],
+            answerIndex: resolveAnswerIndex(row.answer),
+            explanation: row.explanation || ''
+          });
+        });
+
+        const allDates = Object.keys(this.roundsByDate).sort();
+        if (allDates.length === 0) throw new Error('No puzzle records found.');
+
+        if (this.roundsByDate[todayStr]) {
+          this.currentDate = todayStr;
+          this.vaultDates = allDates.filter(d => d < todayStr);
+        } else {
+          const available = allDates.filter(d => d <= todayStr);
+          if (available.length > 0) {
+            this.currentDate = available[available.length - 1];
+            this.vaultDates = available.slice(0, -1);
+          } else {
+            this.currentDate = allDates[0];
+            this.vaultDates = [];
+          }
+        }
+
+        this.vaultDates.sort((a, b) => b.localeCompare(a));
+        this.showView('menuView');
+
+      } catch (err) {
+        this.dom.statusTitle.textContent = 'Notice';
+        this.dom.statusMessage.textContent = err.message || 'Unable to load puzzle at this time.';
+        this.dom.statusRetryBtn.classList.remove('hidden');
+        this.showView('statusView');
       }
     }
 
-    updateStatsUI() {
-      const stats = Store.getStats();
-      this.statPlayed.textContent = stats.played;
-      const accuracy = stats.played > 0 ? Math.round((stats.totalCorrect / (stats.played * 5)) * 100) : 0;
-      this.statAccuracy.textContent = `${accuracy}%`;
-      this.statStreak.textContent = stats.streak;
-    }
+    renderMenu() {
+      this.dom.menuStreakCount.textContent = this.state.streak || 0;
+      this.dom.vaultCountBadge.textContent = this.vaultDates.length;
 
-    showScreen(name) {
-      this.hideResultsModal();
-
-      this.screenMenu.classList.remove('active');
-      this.screenGame.classList.remove('active');
-      this.screenVault.classList.remove('active');
-
-      this.screenMenu.hidden = true;
-      this.screenGame.hidden = true;
-      this.screenVault.hidden = true;
-      this.headerBackBtn.hidden = (name === 'menu');
-
-      if (name === 'menu') {
-        this.bg.setMode('menu');
-        this.screenMenu.classList.add('active');
-        this.screenMenu.hidden = false;
-        this.initView();
-        this.updateStatsUI();
-      } else if (name === 'game') {
-        this.bg.setMode('game');
-        this.screenGame.classList.add('active');
-        this.screenGame.hidden = false;
-      } else if (name === 'vault') {
-        this.bg.setMode('menu');
-        this.screenVault.classList.add('active');
-        this.screenVault.hidden = false;
-      }
-    }
-
-    hideResultsModal() {
-      this.resultsModal.hidden = true;
-      this.resultsModal.classList.remove('is-open');
-    }
-
-    showResultsModal() {
-      const score = this.calculateScore();
-      this.resultsTitle.textContent = score === 5 ? 'Perfect 5-End Match!' : score >= 3 ? 'Handshake Victory!' : 'Match Over';
-      this.resultsSubtitle.textContent = `You scored ${score} out of 5 button shots on Match #${this.activeMatchDay}.`;
-
-      this.resultsStoneRow.innerHTML = '';
-      this.userAnswers.forEach((ans, i) => {
-        const right = (ans === this.activePuzzleData.questions[i].correctIndex);
-        const pill = document.createElement('div');
-        pill.className = `result-stone-pill ${right ? 'win' : 'miss'}`;
-        pill.textContent = right ? '●' : '✕';
-        pill.setAttribute('aria-label', `End ${i + 1}: ${right ? 'Correct' : 'Missed'}`);
-        this.resultsStoneRow.appendChild(pill);
-      });
-
-      this.resultsModal.hidden = false;
-      this.resultsModal.classList.add('is-open');
-      this.announce(`Match complete. Score: ${score} of 5.`);
-    }
-
-    /* ==========================================================================
-       6. GAMEPLAY ENGINE & FUTURE PROTECTION
-       ========================================================================== */
-    startMatch(requestedDay) {
-      // Future puzzle protection: players cannot open future dates
-      let dayIndex = requestedDay;
-      if (dayIndex > this.currentTodayDay) {
-        dayIndex = this.currentTodayDay;
-      }
-
-      this.activeMatchDay = dayIndex;
-      const library = window.CURLING_TRIVIA_PUZZLES || [];
-      if (library.length === 0) {
-        alert('Curling trivia questions failed to load.');
+      if (!this.currentDate) {
+        this.dom.menuTodayDate.textContent = 'Unavailable';
+        this.dom.menuTodayStatus.textContent = 'Unavailable';
+        this.dom.playTodayBtn.disabled = true;
         return;
       }
 
-      const matched = library.find(p => p.dayIndex === dayIndex) || library[dayIndex % library.length];
-      this.activePuzzleData = matched;
+      this.dom.menuTodayDate.textContent = `Match: ${this.currentDate}`;
+      this.dom.playTodayBtn.disabled = false;
 
-      const saved = Store.getPuzzleState(dayIndex);
-      if (saved) {
-        this.userAnswers = saved.answers || [];
-        this.isMatchCompleted = !!saved.completed;
+      const historyItem = this.state.history[this.currentDate];
+      const inProgressItem = this.state.inProgress && this.state.inProgress.date === this.currentDate;
+
+      if (historyItem && historyItem.completed) {
+        this.dom.menuTodayStatus.textContent = `Completed (${historyItem.score}/${historyItem.answers.length})`;
+        this.dom.menuTodayStatus.className = 'badge completed';
+        this.dom.playTodayBtn.textContent = 'View Results';
+      } else if (inProgressItem) {
+        const currentCount = inProgressItem.answers ? inProgressItem.answers.length : 0;
+        const totalCount = this.roundsByDate[this.currentDate].length;
+        this.dom.menuTodayStatus.textContent = `In Progress (${currentCount}/${totalCount})`;
+        this.dom.menuTodayStatus.className = 'badge';
+        this.dom.playTodayBtn.textContent = 'Resume';
       } else {
-        this.userAnswers = [];
-        this.isMatchCompleted = false;
+        this.dom.menuTodayStatus.textContent = 'Not Started';
+        this.dom.menuTodayStatus.className = 'badge';
+        this.dom.playTodayBtn.textContent = 'Play';
       }
-
-      this.activeQuestionIdx = this.userAnswers.length < 5 ? this.userAnswers.length : 0;
-      this.gameDayLabel.textContent = (dayIndex === this.currentTodayDay) ? 'Today' : `Match #${dayIndex}`;
-      this.showScreen('game');
-      this.renderCurrentQuestion();
     }
 
-    renderCurrentQuestion() {
-      const q = this.activePuzzleData.questions[this.activeQuestionIdx];
-      this.gameCategoryTag.textContent = q.category || 'Curling Rules';
-      this.questionStepLabel.textContent = `End ${this.activeQuestionIdx + 1} of 5`;
-      this.questionDifficultyLabel.textContent = q.difficulty || 'Medium';
-      this.questionText.textContent = q.prompt;
+    startRound(dateStr) {
+      const questions = this.roundsByDate[dateStr];
+      if (!questions || questions.length === 0) return;
 
-      const slots = this.endsTracker.querySelectorAll('.end-stone-slot');
-      slots.forEach((slot, i) => {
-        slot.classList.remove('current', 'correct', 'incorrect');
-        if (i === this.activeQuestionIdx) slot.classList.add('current');
-        if (i < this.userAnswers.length) {
-          const isRight = this.userAnswers[i] === this.activePuzzleData.questions[i].correctIndex;
-          slot.classList.add(isRight ? 'correct' : 'incorrect');
-        }
-      });
+      this.activeRound = { date: dateStr, questions: questions };
+      this.isReview = false;
+      this.selectedAnswer = null;
 
-      const answeredThis = this.userAnswers.length > this.activeQuestionIdx;
-      this.optionButtons.forEach((btn, idx) => {
-        btn.disabled = answeredThis;
-        btn.classList.remove('is-correct', 'is-incorrect');
-        btn.querySelector('.choice-text').textContent = q.options[idx];
-        btn.querySelector('.feedback-icon').textContent = '';
-
-        if (answeredThis) {
-          const userChoice = this.userAnswers[this.activeQuestionIdx];
-          if (idx === q.correctIndex) {
-            btn.classList.add('is-correct');
-            btn.querySelector('.feedback-icon').textContent = '✓';
-          } else if (idx === userChoice) {
-            btn.classList.add('is-incorrect');
-            btn.querySelector('.feedback-icon').textContent = '✕';
-          }
-        }
-      });
-
-      if (answeredThis) {
-        this.showExplanation(q, this.userAnswers[this.activeQuestionIdx]);
-      } else {
-        this.explanationCard.hidden = true;
+      const savedHistory = this.state.history[dateStr];
+      if (savedHistory && savedHistory.completed) {
+        this.sessionAnswers = savedHistory.answers;
+        this.showResults(savedHistory.score);
+        return;
       }
 
-      this.announce(`End ${this.activeQuestionIdx + 1}: ${q.prompt}`);
+      const isCurrent = (dateStr === this.currentDate);
+      if (isCurrent && this.state.inProgress && this.state.inProgress.date === dateStr) {
+        this.currentIndex = this.state.inProgress.currentIndex || 0;
+        this.sessionAnswers = this.state.inProgress.answers || [];
+      } else {
+        this.currentIndex = 0;
+        this.sessionAnswers = [];
+      }
+
+      this.dom.gameModeLabel.textContent = isCurrent ? `Today (${dateStr})` : `Vault (${dateStr})`;
+      this.showView('gameView');
+      this.renderQuestion();
     }
 
-    handleOptionSelect(choiceIdx) {
-      if (this.userAnswers.length > this.activeQuestionIdx) return;
+    renderQuestion() {
+      const q = this.activeRound.questions[this.currentIndex];
+      this.selectedAnswer = null;
 
-      const q = this.activePuzzleData.questions[this.activeQuestionIdx];
-      const isCorrect = (choiceIdx === q.correctIndex);
-      this.userAnswers.push(choiceIdx);
+      this.dom.questionText.textContent = q.question;
+      this.dom.explanationPanel.classList.add('hidden');
+      this.dom.optionsContainer.innerHTML = '';
+      this.updateStepper();
+
+      const labels = ['A', 'B', 'C', 'D'];
+      q.options.forEach((text, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', 'false');
+        btn.innerHTML = `<span class="option-key">${labels[idx]}</span><span>${text}</span>`;
+        btn.addEventListener('click', () => this.selectOption(idx));
+        this.dom.optionsContainer.appendChild(btn);
+      });
+
+      const isLast = (this.currentIndex === this.activeRound.questions.length - 1);
+      this.dom.nextQuestionBtn.textContent = isLast ? 'Complete Match' : 'Next Question';
+    }
+
+    updateStepper() {
+      this.dom.stepperTrack.innerHTML = '';
+      this.activeRound.questions.forEach((_, idx) => {
+        const pip = document.createElement('div');
+        pip.className = 'step-pip';
+        pip.textContent = idx + 1;
+        pip.setAttribute('aria-label', `Question ${idx + 1}`);
+
+        if (idx === this.currentIndex) {
+          pip.classList.add('current');
+        } else if (idx < this.sessionAnswers.length) {
+          const correct = this.sessionAnswers[idx].isCorrect;
+          pip.classList.add(correct ? 'correct' : 'incorrect');
+        }
+        this.dom.stepperTrack.appendChild(pip);
+      });
+    }
+
+    selectOption(idx) {
+      if (this.selectedAnswer !== null) return;
+      this.selectedAnswer = idx;
+
+      const q = this.activeRound.questions[this.currentIndex];
+      const isCorrect = (idx === q.answerIndex);
+      this.sessionAnswers.push({ chosen: idx, isCorrect });
 
       if (isCorrect) {
-        this.audio.playCorrect();
+        this.sound.correct();
+        this.dom.answerIndicator.textContent = '✓ Shot Made';
+        this.dom.answerIndicator.className = 'answer-badge correct';
       } else {
-        this.audio.playIncorrect();
+        this.sound.incorrect();
+        this.dom.answerIndicator.textContent = '✕ Miss';
+        this.dom.answerIndicator.className = 'answer-badge incorrect';
       }
 
-      this.optionButtons.forEach((btn, idx) => {
+      const buttons = this.dom.optionsContainer.querySelectorAll('.option-btn');
+      buttons.forEach((btn, bIdx) => {
         btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.add('is-correct');
-          btn.querySelector('.feedback-icon').textContent = '✓';
-        } else if (idx === choiceIdx) {
-          btn.classList.add('is-incorrect');
-          btn.querySelector('.feedback-icon').textContent = '✕';
+        if (bIdx === q.answerIndex) {
+          btn.classList.add('correct');
+        } else if (bIdx === idx && !isCorrect) {
+          btn.classList.add('incorrect');
+        }
+        if (bIdx === idx) {
+          btn.setAttribute('aria-checked', 'true');
         }
       });
 
-      const slots = this.endsTracker.querySelectorAll('.end-stone-slot');
-      slots[this.activeQuestionIdx].classList.remove('current');
-      slots[this.activeQuestionIdx].classList.add(isCorrect ? 'correct' : 'incorrect');
+      this.dom.explanationText.textContent = q.explanation || 'No coach notes provided.';
+      this.dom.explanationPanel.classList.remove('hidden');
+      this.updateStepper();
 
-      const isComplete = this.userAnswers.length === 5;
-      const score = this.calculateScore();
-      Store.savePuzzleState(this.activeMatchDay, {
-        answers: this.userAnswers,
-        completed: isComplete,
-        score: score
+      if (this.activeRound.date === this.currentDate) {
+        this.state.inProgress = {
+          date: this.currentDate,
+          currentIndex: this.currentIndex,
+          answers: this.sessionAnswers
+        };
+        Storage.save(this.state);
+      }
+
+      this.dom.nextQuestionBtn.focus();
+    }
+
+    handleNextQuestion() {
+      if (this.isReview) {
+        if (this.currentIndex < this.activeRound.questions.length - 1) {
+          this.currentIndex++;
+          this.renderReviewQuestion();
+        } else {
+          this.showView('resultsView');
+        }
+        return;
+      }
+
+      if (this.currentIndex < this.activeRound.questions.length - 1) {
+        this.currentIndex++;
+        if (this.activeRound.date === this.currentDate && this.state.inProgress) {
+          this.state.inProgress.currentIndex = this.currentIndex;
+          Storage.save(this.state);
+        }
+        this.renderQuestion();
+      } else {
+        this.finishRound();
+      }
+    }
+
+    finishRound() {
+      const score = this.sessionAnswers.filter(a => a.isCorrect).length;
+      const isCurrent = (this.activeRound.date === this.currentDate);
+
+      if (isCurrent) {
+        if (this.state.lastCompletedDate) {
+          const last = new Date(this.state.lastCompletedDate);
+          const curr = new Date(this.currentDate);
+          const diffDays = Math.round((curr - last) / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            this.state.streak = (this.state.streak || 0) + 1;
+          } else if (diffDays > 1) {
+            this.state.streak = 1;
+          }
+        } else {
+          this.state.streak = 1;
+        }
+        this.state.lastCompletedDate = this.currentDate;
+        this.state.inProgress = null;
+      }
+
+      this.state.history[this.activeRound.date] = {
+        completed: true,
+        score: score,
+        answers: this.sessionAnswers
+      };
+      Storage.save(this.state);
+
+      this.sound.complete();
+      this.showResults(score);
+    }
+
+    showResults(score) {
+      this.showView('resultsView');
+      const total = this.sessionAnswers.length;
+      this.dom.scoreValue.textContent = score;
+      this.dom.scoreTotal.textContent = `/ ${total}`;
+
+      this.dom.resultsBreakdown.innerHTML = '';
+      this.sessionAnswers.forEach((ans, idx) => {
+        const pip = document.createElement('div');
+        pip.className = `result-pip ${ans.isCorrect ? 'correct' : 'incorrect'}`;
+        pip.textContent = ans.isCorrect ? '✓' : '✕';
+        pip.setAttribute('aria-label', `End ${idx + 1}: ${ans.isCorrect ? 'Made' : 'Miss'}`);
+        this.dom.resultsBreakdown.appendChild(pip);
+      });
+    }
+
+    startReview() {
+      this.isReview = true;
+      this.currentIndex = 0;
+      this.showView('gameView');
+      this.renderReviewQuestion();
+    }
+
+    renderReviewQuestion() {
+      const q = this.activeRound.questions[this.currentIndex];
+      const ans = this.sessionAnswers[this.currentIndex] || { chosen: -1, isCorrect: false };
+      this.updateStepper();
+
+      this.dom.questionText.textContent = q.question;
+      this.dom.optionsContainer.innerHTML = '';
+      const labels = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((text, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.disabled = true;
+        if (idx === q.answerIndex) {
+          btn.classList.add('correct');
+        } else if (idx === ans.chosen && !ans.isCorrect) {
+          btn.classList.add('incorrect');
+        }
+        btn.innerHTML = `<span class="option-key">${labels[idx]}</span><span>${text}</span>`;
+        this.dom.optionsContainer.appendChild(btn);
       });
 
-      if (isComplete && !this.isMatchCompleted) {
-        this.isMatchCompleted = true;
-        this.updateStatsOnCompletion(score);
-      }
-
-      this.showExplanation(q, choiceIdx);
-    }
-
-    showExplanation(q, choiceIdx) {
-      const isCorrect = choiceIdx === q.correctIndex;
-      this.explanationResultTag.textContent = isCorrect ? 'Right on the Button! (+1)' : 'Swept Out of the House (Miss)';
-      this.explanationResultTag.className = isCorrect ? 'result-tag-correct' : 'result-tag-incorrect';
-      this.explanationBodyText.textContent = q.explanation || '';
-      this.nextBtnText.textContent = (this.activeQuestionIdx < 4) ? 'Next End' : 'View Results';
-      this.explanationCard.hidden = false;
-
-      this.announce(`${isCorrect ? 'Correct' : 'Incorrect'}. ${q.explanation}`);
-    }
-
-    advanceNextQuestion() {
-      this.audio.playSelect();
-      if (this.activeQuestionIdx < 4) {
-        this.activeQuestionIdx++;
-        this.renderCurrentQuestion();
+      if (ans.isCorrect) {
+        this.dom.answerIndicator.textContent = '✓ Shot Made';
+        this.dom.answerIndicator.className = 'answer-badge correct';
       } else {
-        this.showResultsModal();
+        this.dom.answerIndicator.textContent = '✕ Miss';
+        this.dom.answerIndicator.className = 'answer-badge incorrect';
       }
+
+      this.dom.explanationText.textContent = q.explanation || 'No coach notes provided.';
+      this.dom.explanationPanel.classList.remove('hidden');
+
+      const isLast = (this.currentIndex === this.activeRound.questions.length - 1);
+      this.dom.nextQuestionBtn.textContent = isLast ? 'Return to Results' : 'Next Question';
     }
 
-    calculateScore() {
-      let score = 0;
-      this.userAnswers.forEach((ans, i) => {
-        if (ans === this.activePuzzleData.questions[i].correctIndex) score++;
+    renderVault() {
+      this.showView('vaultView');
+      this.dom.vaultList.innerHTML = '';
+
+      if (this.vaultDates.length === 0) {
+        this.dom.vaultEmptyMsg.classList.remove('hidden');
+        return;
+      }
+      this.dom.vaultEmptyMsg.classList.add('hidden');
+
+      this.vaultDates.forEach(dateStr => {
+        const item = document.createElement('div');
+        item.className = 'vault-item';
+        item.setAttribute('role', 'listitem');
+        item.tabIndex = 0;
+
+        const hist = this.state.history[dateStr];
+        const isDone = hist && hist.completed;
+
+        item.innerHTML = `
+          <span class="vault-date">${dateStr}</span>
+          <span class="badge ${isDone ? 'completed' : ''}">
+            ${isDone ? `Score: ${hist.score}/${hist.answers.length}` : 'Play'}
+          </span>
+        `;
+
+        const playAction = () => {
+          this.sound.tap();
+          this.startRound(dateStr);
+        };
+
+        item.addEventListener('click', playAction);
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            playAction();
+          }
+        });
+
+        this.dom.vaultList.appendChild(item);
       });
-      return score;
     }
 
-    updateStatsOnCompletion(score) {
-      const stats = Store.getStats();
-      stats.played += 1;
-      stats.totalCorrect += score;
-      if (score >= 3) {
-        stats.won += 1;
-        stats.streak += 1;
-        if (stats.streak > stats.maxStreak) stats.maxStreak = stats.streak;
-      } else {
-        stats.streak = 0;
-      }
-      Store.saveStats(stats);
-      this.updateStatsUI();
-      this.audio.playComplete();
-    }
-
-    shareScore() {
-      const score = this.calculateScore();
-      const stones = this.userAnswers.map((ans, i) => {
-        return ans === this.activePuzzleData.questions[i].correctIndex ? '🟡' : '🔴';
-      }).join('');
-
-      const shareText = `Curling Trivia Match #${this.activeMatchDay} — ${score}/5\n${stones}\nhttps://tileworksgamesstudio.github.io/Curling-Menu/`;
+    shareResults() {
+      const score = this.sessionAnswers.filter(a => a.isCorrect).length;
+      const total = this.sessionAnswers.length;
+      // Red and Yellow curling stone emojis in results sharing
+      const icons = this.sessionAnswers.map(a => a.isCorrect ? '🔴' : '🟡').join('');
+      const text = `Daily Quiz (Curling Sheet) • ${this.activeRound.date}\nScore: ${score}/${total}\n${icons}`;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareText).then(() => {
-          this.shareBtnText.textContent = 'Copied to Clipboard!';
-          setTimeout(() => { this.shareBtnText.textContent = 'Share Score'; }, 2000);
-        });
+        navigator.clipboard.writeText(text)
+          .then(() => this.showToast('Match record copied to clipboard!'))
+          .catch(() => this.showToast('Unable to copy record.'));
       } else {
-        alert(shareText);
+        this.showToast('Sharing not supported on this browser.');
       }
     }
 
-    /* ==========================================================================
-       7. VAULT ARCHIVE
-       ========================================================================== */
-    showVault() {
-      this.vaultItemsList.innerHTML = '';
-      const library = window.CURLING_TRIVIA_PUZZLES || [];
-
-      // Vault strictly contains released matches prior to today
-      const released = library.filter(p => p.dayIndex < this.currentTodayDay);
-
-      if (released.length === 0) {
-        const emptyMsg = document.createElement('div');
-        emptyMsg.className = 'liquid-card';
-        emptyMsg.style.textAlign = 'center';
-        emptyMsg.style.padding = '24px 16px';
-        emptyMsg.innerHTML = `
-          <p style="font-weight: 800; color: var(--blue-ink-deep); margin-bottom: 4px;">Vault Is Empty</p>
-          <p style="font-size: 0.85rem; color: var(--blue-ink-muted);">Yesterday's match slides into the vault at midnight!</p>
-        `;
-        this.vaultItemsList.appendChild(emptyMsg);
-      } else {
-        released.slice().reverse().forEach(puzzle => {
-          const item = document.createElement('div');
-          item.className = 'vault-item-card';
-
-          const state = Store.getPuzzleState(puzzle.dayIndex);
-          const scoreText = state && state.completed ? `Score: ${state.score}/5` : 'Not Played';
-
-          item.innerHTML = `
-            <div class="vault-info">
-              <span class="vault-item-day">Match #${puzzle.dayIndex}</span>
-              <span class="vault-item-meta">${getFormattedDate(puzzle.dayIndex)} • 5 Ends</span>
-              <span class="vault-score-badge">${scoreText}</span>
-            </div>
-            <button class="btn btn-secondary" style="min-height: 38px; padding: 0 14px; font-size: 0.85rem;">Play</button>
-          `;
-
-          item.querySelector('button').addEventListener('click', () => {
-            this.startMatch(puzzle.dayIndex);
-          });
-          this.vaultItemsList.appendChild(item);
-        });
-      }
-
-      this.showScreen('vault');
+    showToast(msg) {
+      this.dom.toastMessage.textContent = msg;
+      this.dom.toastMessage.classList.add('visible');
+      setTimeout(() => this.dom.toastMessage.classList.remove('visible'), 2200);
     }
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    new TriviaApp();
-  });
+  document.addEventListener('DOMContentLoaded', () => new UniversalQuiz());
 })();
